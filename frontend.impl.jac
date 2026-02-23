@@ -11,10 +11,7 @@ impl app.handleLogin -> None {
     loading = False;
     if success {
         isLoggedIn = True;
-        username = "";
         password = "";
-    } else {
-        error = "Invalid username or password";
     }
 }
 
@@ -33,8 +30,8 @@ impl app.handleSignup -> None {
     result = await jacSignup(username, password);
     loading = False;
 
+    # !!! Upon signup, direct user to login page with success message (or auto-login)
     if result["success"] {
-        isLoggedIn = True;
         username = "";
         password = "";
     } else {
@@ -71,7 +68,6 @@ impl app.handleNewInterview -> None {
 
 impl app.handleRoleSubmit(e: any) -> None {
     e.preventDefault();
-    console.log("Job title entered:", jobTitle);
     showRoleInput = False;
     showQuestionInput = True;
 }
@@ -84,12 +80,13 @@ impl app.handleBackToRole -> None {
 impl app.handleHome -> None {
     showQuestionInput = False;
     showRoleInput = False;
-    jobTitle = "";
-    questionText = "";
+    showInterviewContext = False;
 }
 
 impl app.handleQuestionSubmit(e: any) -> None {
     e.preventDefault();
-    console.log("Role:", jobTitle);
-    console.log("Question:", questionText);
+    jobId = crypto.randomUUID();
+    showRoleInput = False;
+    showQuestionInput = False;
+    showInterviewContext = True;
 }

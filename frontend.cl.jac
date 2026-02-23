@@ -4,6 +4,8 @@ import from "@jac/runtime" { jacSignup, jacLogin, jacLogout, jacIsLoggedIn }
 
 import from .components.AuthForm { AuthForm }
 
+sv import from main { Interview, GetInterviewItems }
+
 def:pub app -> any {
     has isLoggedIn: bool = False,
         checkingAuth: bool = True,
@@ -16,9 +18,11 @@ def:pub app -> any {
         # Interview flow state
         showRoleInput: bool = False,
         showQuestionInput: bool = False,
-        jobTitle: str = "",
-        questionText: str = "";
-
+        roleTitle: str = "",
+        jobId: str = "",
+        questionText: str = "",
+        showInterviewContext: bool = False;
+        
     can with entry {
         isLoggedIn = jacIsLoggedIn();
         checkingAuth = False;
@@ -36,11 +40,10 @@ def:pub app -> any {
 
     def handleRoleSubmit(e: any) -> None {
         e.preventDefault();
-        if jobTitle == "" {
+        if roleTitle == "" {
             return;
         }
 
-        console.log("Job title entered:", jobTitle);
         showRoleInput = False;
         showQuestionInput = True;
     }
@@ -51,16 +54,18 @@ def:pub app -> any {
     }
 
     def handleHome -> None {
-        showQuestionInput = False;
         showRoleInput = False;
-        jobTitle = "";
+        showQuestionInput = False;
+        showInterviewContext = False;
+
+        roleTitle = "";
         questionText = "";
+        jobId = "";
     }
 
     def handleQuestionSubmit(e: any) -> None {
-        e.preventDefault();
-        console.log("Role:", jobTitle);
-        console.log("Question:", questionText);
+        showQuestionInput = False;
+        showInterviewContext = True;
     }
 
     # Loading screen
@@ -81,6 +86,48 @@ def:pub app -> any {
     # Logged in
     if isLoggedIn {
 
+        # Interview context screen
+        if showInterviewContext {
+            return
+                <div style={{
+                    "height": "100vh",
+                    "fontFamily": "system-ui, sans-serif",
+                    "display": "flex",
+                    "flexDirection": "column"
+                }}>
+                    <div style={{
+                        "display": "flex",
+                        "justifyContent": "flex-start",
+                        "alignItems": "center",
+                        "padding": "1rem 1.5rem",
+                        "borderBottom": "1px solid #ddd"
+                    }}>
+                        <button onClick={handleHome} style={{
+                            "padding": "0.5rem 1rem",
+                            "borderRadius": "6px",
+                            "border": "1px solid #ccc",
+                            "backgroundColor": "#f8f9fa",
+                            "cursor": "pointer"
+                        }}>
+                            Home
+                        </button>
+                    </div>
+
+                    <div style={{
+                        "flex": "1",
+                        "display": "flex",
+                        "flexDirection": "column",
+                        "justifyContent": "center",
+                        "alignItems": "center"
+                    }}>
+                        <h2>Interview Context</h2>
+                        <p><strong>Username:</strong> {username}</p>
+                        <p><strong>Job ID:</strong> {jobId}</p>
+                        <p><strong>Role Applying For:</strong> {roleTitle}</p>
+                        <p><strong>Question:</strong> {questionText}</p>
+                    </div>
+                </div>;
+        }
         # Question input screen
         if showQuestionInput {
             return
@@ -102,7 +149,7 @@ def:pub app -> any {
                             "fontSize": "0.9rem",
                             "color": "#555"
                         }}>
-                            Role: {jobTitle}
+                            Role: {roleTitle}
                         </div>
 
                         <button
@@ -131,8 +178,7 @@ def:pub app -> any {
                             Type the question you are answering
                         </h2>
 
-""" CHANGE onSubmit BACK TO handleQuestionSubmit DURING FURTHER IMPLEMENTATION."""
-                        <form onSubmit={handleHome} style={{"width": "60%"}}>
+                        <form onSubmit={handleQuestionSubmit} style={{"width": "60%"}}>
                             <textarea
                                 value={questionText}
                                 onChange={lambda e: any -> None { questionText = e.target.value; }}
@@ -207,9 +253,9 @@ def:pub app -> any {
                     <form onSubmit={handleRoleSubmit} style={{"width": "300px"}}>
                         <input
                             type="text"
-                            value={jobTitle}
+                            value={roleTitle}
                             placeholder="e.g. Software Engineer"
-                            onChange={lambda e: any -> None { jobTitle = e.target.value; }}
+                            onChange={lambda e: any -> None { roleTitle = e.target.value; }}
                             style={{
                                 "width": "100%",
                                 "padding": "0.75rem",
