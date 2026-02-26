@@ -14,6 +14,7 @@ def:pub app -> any {
         password: str = "",
         error: str = "",
         loading: bool = False,
+        rememberMe: bool = False,
 
         # Interview flow state
         showRoleInput: bool = False,
@@ -25,6 +26,11 @@ def:pub app -> any {
         
     can with entry {
         isLoggedIn = jacIsLoggedIn();
+        savedUser = localStorage.getItem("remembered_username");
+        if savedUser {
+            username = savedUser;
+            rememberMe = True;
+        }
         checkingAuth = False;
     }
 
@@ -334,14 +340,16 @@ def:pub app -> any {
     # Not logged in
     return
         <AuthForm
-            isSignup={isSignup}
-            username={username}
-            password={password}
-            error={error}
-            loading={loading}
-            onUsernameChange={lambda e: any -> None { username = e.target.value; }}
-            onPasswordChange={lambda e: any -> None { password = e.target.value; }}
-            onSubmit={handleSubmit}
-            onToggleMode={lambda -> None { isSignup = not isSignup; error = ""; }}
-        />;
+        isSignup={isSignup}
+        username={username}
+        password={password}
+        rememberMe={rememberMe}
+        error={error}
+        loading={loading}
+        onUsernameChange={lambda e: any -> None { username = e.target.value; }}
+        onPasswordChange={lambda e: any -> None { password = e.target.value; }}
+        onRememberChange={lambda e: any -> None { rememberMe = e.target.checked; }}
+        onSubmit={handleSubmit}
+        onToggleMode={lambda -> None { isSignup = not isSignup; error = ""; }}
+    />;
 }

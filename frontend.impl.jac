@@ -12,6 +12,12 @@ impl app.handleLogin -> None {
     if success {
         isLoggedIn = True;
         password = "";
+
+        if rememberMe {
+            localStorage.setItem("remembered_username", username);
+        } else {
+            localStorage.removeItem("remembered_username");
+        }
     }
 }
 

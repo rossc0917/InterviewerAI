@@ -6,6 +6,8 @@ def:pub AuthForm(
     password: str,
     error: str,
     loading: bool,
+    rememberMe: bool,
+    onRememberChange: any,
     onUsernameChange: any,
     onPasswordChange: any,
     onSubmit: any,
@@ -90,6 +92,21 @@ def:pub AuthForm(
                         "boxSizing": "border-box"
                     }}
                 />
+                <div style={{
+                    "display": "flex",
+                    "alignItems": "center",
+                    "marginBottom": "1rem"
+                }}>
+                    <input
+                        type="checkbox"
+                        checked={rememberMe}
+                        onChange={onRememberChange}
+                        style={{"marginRight": "0.5rem"}}
+                    />
+                    <label style={{"fontSize": "0.9rem", "color": "#555"}}>
+                        Remember me
+                    </label>
+                </div>
                 <button
                     type="submit"
                     disabled={loading}
