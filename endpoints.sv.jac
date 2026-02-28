@@ -3,55 +3,56 @@
 import os;
 import tempfile;
 import base64;
-import time;  # <--- NEW: Needed for our waiting loop
-import google.generativeai as genai;
+import time;
+import google.genai as genai;
 
-walker:priv SubmitInterview {
+walker:pub SubmitInterview {
     has role: str;
     has question: str;
     has video_b64: str;
 
     can process with Root entry {
-        # 1. Grab the API key from your environment
         api_key = os.environ.get("GEMINI_API_KEY");
         if not api_key {
-            report {"error": "GEMINI_API_KEY is missing. Please set it in your terminal before running jac start."};
+            report {"error": "GEMINI_API_KEY is missing."};
             return;
         }
 
-        genai.configure(api_key=api_key);
+        # NEW: Initialize the client directly
+        client = genai.Client(api_key=api_key);
 
         try {
-            # 2. Extract the raw video data from the base64 string
+            print("\n--- NEW INTERVIEW SUBMISSION ---");
+            print("1. Decoding video data...");
             encoded_data = self.video_b64.split(",")[1];
             video_data = base64.b64decode(encoded_data);
 
-            # 3. Save it to a temporary file
             temp_file_path = "";
             with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as temp_video {
                 temp_video.write(video_data);
                 temp_file_path = temp_video.name;
             }
 
-            # 4. Upload to the Gemini File API
-            video_file = genai.upload_file(path=temp_file_path);
+            print("2. Uploading to Gemini Servers...");
+            # NEW: Upload syntax
+            video_file = client.files.upload(file=temp_file_path);
 
-            # 5. WAIT FOR PROCESSING (The Magic Fix)
-            # Gemini needs time to extract frames and audio before the LLM can see it.
+            print("3. Waiting for Gemini to process the video...");
             while video_file.state.name == "PROCESSING" {
-                time.sleep(2);
-                video_file = genai.get_file(video_file.name);
+                print("   ...still processing...");
+                time.sleep(5);
+                # NEW: File polling syntax
+                video_file = client.files.get(name=video_file.name);
             }
             
-            # Catch corrupted uploads
             if video_file.state.name == "FAILED" {
+                print("❌ Error: Gemini failed to process the video.");
                 report {"error": "Gemini failed to process the uploaded video."};
                 os.remove(temp_file_path);
                 return;
             }
 
-            # 6. Prompt Gemini 1.5 Pro
-            model = genai.GenerativeModel("gemini-1.5-pro");
+            print("4. Generating feedback using Gemini 2.5 Flash...");
             prompt = (
                 "You are an expert interview coach. " +
                 "The candidate is applying for the role of: " + self.role + ". " +
@@ -61,15 +62,19 @@ walker:priv SubmitInterview {
                 "Provide highly actionable, constructive feedback in a clean, readable format."
             );
 
-            response = model.generate_content([prompt, video_file]);
+            # NEW: Generation syntax
+            response = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=[prompt, video_file]
+            );
 
-            # 7. Clean up the temp file
             os.remove(temp_file_path);
 
-            # 8. Send the AI's advice back to the frontend
+            print("5. ✅ Success! Sending feedback to frontend.");
             report {"success": True, "feedback": response.text};
 
         } except Exception as e {
+            print("❌ Backend Error: " + str(e));
             report {"error": "Backend Error: " + str(e)};
         }
     }

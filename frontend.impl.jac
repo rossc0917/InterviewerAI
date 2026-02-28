@@ -1,4 +1,5 @@
 """Implementations for InterviewerAI frontend."""
+
 sv import from endpoints { SubmitInterview }
 
 impl app.handleRoleSubmit(e: any) -> None {
@@ -20,28 +21,55 @@ impl app.handleHome -> None {
     roleTitle = "";
     questionText = "";
     
-    # Clean up the camera if the user clicks Home while it's running
     cameraActive = False;
     isRecording = False;
     hasRecorded = False;
     eval("if (window.localStream) { window.localStream.getTracks().forEach(track => track.stop()); }");
 }
 
+# FIX: Removed the 'async' keyword here!
 impl app.startCamera -> None {
-    # Request camera/mic permissions and attach stream to the video tag
-    eval("navigator.mediaDevices.getUserMedia({video: true, audio: true}).then(stream => { window.localStream = stream; document.getElementById('webcam-video').srcObject = stream; }).catch(err => console.error('Camera error:', err));");
-    cameraActive = True;
-    hasRecorded = False;
+    status = await eval("""
+        new Promise((resolve) => {
+            navigator.mediaDevices.getUserMedia({video: true, audio: true})
+            .then(stream => {
+                window.localStream = stream;
+                document.getElementById('webcam-video').srcObject = stream;
+                resolve("READY");
+            })
+            .catch(err => {
+                console.error('Camera error:', err);
+                alert("Could not access camera/microphone. Please check permissions!");
+                resolve("ERROR");
+            });
+        })
+    """);
+
+    if status == "READY" {
+        cameraActive = True;
+        hasRecorded = False;
+    }
 }
 
 impl app.startRecording -> None {
-    # Initialize the MediaRecorder and start capturing chunks
-    eval("window.mediaRecorder = new MediaRecorder(window.localStream); window.recordedChunks = []; window.mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) window.recordedChunks.push(e.data); }; window.mediaRecorder.start();");
+    is_ready = eval("window.localStream ? 'YES' : 'NO'");
+    if is_ready == "NO" {
+        eval("alert('Camera is not ready yet!');");
+        return;
+    }
+
+    eval("""
+        window.mediaRecorder = new MediaRecorder(window.localStream); 
+        window.recordedChunks = []; 
+        window.mediaRecorder.ondataavailable = (e) => { 
+            if (e.data.size > 0) window.recordedChunks.push(e.data); 
+        }; 
+        window.mediaRecorder.start();
+    """);
     isRecording = True;
 }
 
 impl app.stopRecording -> None {
-    # Stop recording, compile the video into a Blob, and set it to the playback video tag
     eval("window.mediaRecorder.onstop = () => { const blob = new Blob(window.recordedChunks, { type: 'video/webm' }); window.recordedVideoBlob = blob; document.getElementById('playback-video').src = URL.createObjectURL(blob); window.localStream.getTracks().forEach(track => track.stop()); }; window.mediaRecorder.stop();");
     isRecording = False;
     cameraActive = False;
@@ -50,9 +78,57 @@ impl app.stopRecording -> None {
 
 impl app.resetRecording -> None {
     hasRecorded = False;
-    adviceText = ""; # Clear old advice
+    adviceText = "";
     eval("document.getElementById('playback-video').src = '';");
     startCamera();
+}
+
+impl app.getFeedback -> None {
+    isAnalyzing = True;
+    adviceText = "Preparing video for upload...";
+
+    b64_string = await eval("""
+        new Promise((resolve) => {
+            try {
+                if (!window.recordedVideoBlob) {
+                    resolve("ERROR: No video found.");
+                    return;
+                }
+                const reader = new FileReader();
+                reader.readAsDataURL(window.recordedVideoBlob);
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = () => resolve("ERROR: Failed to read video file.");
+            } catch (err) {
+                resolve("ERROR: " + err.message);
+            }
+        })
+    """);
+
+    if b64_string.startsWith("ERROR:") {
+        adviceText = "Browser Error: " + str(b64_string);
+        isAnalyzing = False;
+        return;
+    }
+
+    adviceText = "Uploading video... Watch your terminal to see the live progress!";
+
+    response = await root spawn SubmitInterview(
+        role=roleTitle, 
+        question=questionText, 
+        video_b64=b64_string
+    );
+
+    if response and response.reports and response.reports.length > 0 {
+        if response.reports[0]["success"] {
+            adviceText = response.reports[0]["feedback"];
+        } else {
+            adviceText = "Error analyzing video: " + str(response.reports[0]["error"]);
+        }
+    } else {
+        adviceText = "The server timed out or returned an empty response. Check your terminal for the red error logs!";
+    }
+    
+    isAnalyzing = False;
 }
 
 impl app.handleGiveFeedback -> None {
@@ -61,34 +137,4 @@ impl app.handleGiveFeedback -> None {
 
 impl app.handleRefineAdvice -> None {
     print("User clicked Refine Advice");
-}
-
-impl app.getFeedback -> None {
-    isAnalyzing = True;
-    adviceText = "Uploading video to Gemini... This might take up to a minute to process!";
-
-    # Convert the video Blob to a base64 string using JS
-    b64_string = await eval("""
-        new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(window.recordedVideoBlob);
-            reader.onloadend = () => resolve(reader.result);
-        })
-    """);
-
-    # Call the backend walker we just built
-    response = root spawn SubmitInterview(
-        role=roleTitle, 
-        question=questionText, 
-        video_b64=b64_string
-    );
-
-    # Update the UI with the result
-    if response.reports and response.reports[0]["success"] {
-        adviceText = response.reports[0]["feedback"];
-    } else {
-        adviceText = "Error analyzing video: " + str(response.reports[0]["error"]);
-    }
-    
-    isAnalyzing = False;
 }

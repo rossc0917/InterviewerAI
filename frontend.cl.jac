@@ -17,7 +17,7 @@ def:pub app {
     def handleHome -> None;
     def handleGiveFeedback -> None;
     def handleRefineAdvice -> None;
-    def startCamera -> None;
+    async def startCamera -> None;  # <--- Make this async
     def startRecording -> None;
     def stopRecording -> None;
     def resetRecording -> None;
