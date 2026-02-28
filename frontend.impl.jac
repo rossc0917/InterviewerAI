@@ -1,98 +1,94 @@
-"""Implementations for the Todo App frontend component."""
-
-impl app.handleLogin -> None {
-    error = "";
-    if not username.trim() or not password {
-        error = "Please fill in all fields";
-        return;
-    }
-    loading = True;
-    success = await jacLogin(username, password);
-    loading = False;
-    if success {
-        isLoggedIn = True;
-        password = "";
-
-        if rememberMe {
-            localStorage.setItem("remembered_username", username);
-        } else {
-            localStorage.removeItem("remembered_username");
-        }
-    }
-}
-
-impl app.handleSignup -> None {
-    error = "";
-    if not username.trim() or not password {
-        error = "Please fill in all fields";
-        return;
-    }
-    if password.length < 4 {
-        error = "Password must be at least 4 characters";
-        return;
-    }
-
-    loading = True;
-    result = await jacSignup(username, password);
-    loading = False;
-
-    # !!! Upon signup, direct user to login page with success message (or auto-login)
-    if result["success"] {
-        username = "";
-        password = "";
-    } else {
-        # ✅ extract message safely
-        if result["error"] and result["error"]["message"] {
-            error = result["error"]["message"];
-        } else {
-            error = "Signup failed";
-        }
-    }
-}
-
-impl app.handleLogout -> None {
-    jacLogout();
-    isLoggedIn = False;
-    username = "";
-    password = "";
-    error = "";
-    showWelcome = False;
-}
-
-impl app.handleSubmit(e: any) -> None {
-    e.preventDefault();
-    if isSignup {
-        await handleSignup();
-    } else {
-        await handleLogin();
-    }
-}
-
-impl app.handleNewInterview -> None {
-    showRoleInput = True;
-}
+"""Implementations for InterviewerAI frontend."""
+sv import from endpoints { SubmitInterview }
 
 impl app.handleRoleSubmit(e: any) -> None {
     e.preventDefault();
-    showRoleInput = False;
-    showQuestionInput = True;
-}
-
-impl app.handleBackToRole -> None {
-    showQuestionInput = False;
-    showRoleInput = True;
-}
-
-impl app.handleHome -> None {
-    showQuestionInput = False;
-    showRoleInput = False;
-    showInterviewContext = False;
+    if roleTitle.trim() != "" {
+        currentScreen = "question";
+    }
 }
 
 impl app.handleQuestionSubmit(e: any) -> None {
     e.preventDefault();
-    jobId = crypto.randomUUID();
-    showRoleInput = False;
-    showQuestionInput = False;
-    showInterviewContext = True;
+    if questionText.trim() != "" {
+        currentScreen = "interview";
+    }
+}
+
+impl app.handleHome -> None {
+    currentScreen = "role";
+    roleTitle = "";
+    questionText = "";
+    
+    # Clean up the camera if the user clicks Home while it's running
+    cameraActive = False;
+    isRecording = False;
+    hasRecorded = False;
+    eval("if (window.localStream) { window.localStream.getTracks().forEach(track => track.stop()); }");
+}
+
+impl app.startCamera -> None {
+    # Request camera/mic permissions and attach stream to the video tag
+    eval("navigator.mediaDevices.getUserMedia({video: true, audio: true}).then(stream => { window.localStream = stream; document.getElementById('webcam-video').srcObject = stream; }).catch(err => console.error('Camera error:', err));");
+    cameraActive = True;
+    hasRecorded = False;
+}
+
+impl app.startRecording -> None {
+    # Initialize the MediaRecorder and start capturing chunks
+    eval("window.mediaRecorder = new MediaRecorder(window.localStream); window.recordedChunks = []; window.mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) window.recordedChunks.push(e.data); }; window.mediaRecorder.start();");
+    isRecording = True;
+}
+
+impl app.stopRecording -> None {
+    # Stop recording, compile the video into a Blob, and set it to the playback video tag
+    eval("window.mediaRecorder.onstop = () => { const blob = new Blob(window.recordedChunks, { type: 'video/webm' }); window.recordedVideoBlob = blob; document.getElementById('playback-video').src = URL.createObjectURL(blob); window.localStream.getTracks().forEach(track => track.stop()); }; window.mediaRecorder.stop();");
+    isRecording = False;
+    cameraActive = False;
+    hasRecorded = True;
+}
+
+impl app.resetRecording -> None {
+    hasRecorded = False;
+    adviceText = ""; # Clear old advice
+    eval("document.getElementById('playback-video').src = '';");
+    startCamera();
+}
+
+impl app.handleGiveFeedback -> None {
+    print("User clicked Give Feedback");
+}
+
+impl app.handleRefineAdvice -> None {
+    print("User clicked Refine Advice");
+}
+
+impl app.getFeedback -> None {
+    isAnalyzing = True;
+    adviceText = "Uploading video to Gemini... This might take up to a minute to process!";
+
+    # Convert the video Blob to a base64 string using JS
+    b64_string = await eval("""
+        new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(window.recordedVideoBlob);
+            reader.onloadend = () => resolve(reader.result);
+        })
+    """);
+
+    # Call the backend walker we just built
+    response = root spawn SubmitInterview(
+        role=roleTitle, 
+        question=questionText, 
+        video_b64=b64_string
+    );
+
+    # Update the UI with the result
+    if response.reports and response.reports[0]["success"] {
+        adviceText = response.reports[0]["feedback"];
+    } else {
+        adviceText = "Error analyzing video: " + str(response.reports[0]["error"]);
+    }
+    
+    isAnalyzing = False;
 }

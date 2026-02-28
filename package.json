@@ -1,0 +1,26 @@
+{
+  "name": "interviewerai",
+  "version": "1.0.0",
+  "description": "A full-stack Jac application with user authentication and todo list functionality.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rossc0917/InterviewerAI.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rossc0917/InterviewerAI/issues"
+  },
+  "homepage": "https://github.com/rossc0917/InterviewerAI#readme",
+  "dependencies": {
+    "jac-client-node": "^1.0.4"
+  },
+  "devDependencies": {
+    "@jac-client/dev-deps": "^1.0.0"
+  }
+}

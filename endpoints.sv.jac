@@ -1,85 +1,76 @@
-"""Todo App - Server-Side Data Layer.
+"""InterviewerAI - Server-Side Data Layer."""
 
-Each user gets their own todo list automatically!
-When authenticated, `root spawn` uses the user's personal root node.
-"""
+import os;
+import tempfile;
+import base64;
+import time;  # <--- NEW: Needed for our waiting loop
+import google.generativeai as genai;
 
-# ========================================
-# Data Models
-# ========================================
-node Todo {
-    has id: str,
-        title: str,
-        completed: bool = False;
-}
+walker:priv SubmitInterview {
+    has role: str;
+    has question: str;
+    has video_b64: str;
 
-glob todo_counter: int = 0;
-
-# ========================================
-# Walkers (API Operations)
-# ========================================
-walker:priv AddTodo {
-    """Add a new todo item to the user's list."""
-    has title: str;
-
-    can create with Root entry {
-        global todo_counter;
-        todo_counter += 1;
-        new_id = "todo_" + str(todo_counter);
-        new_todo = here ++> Todo(id=new_id, title=self.title, completed=False);
-        if new_todo {
-            report new_todo[0] ;
+    can process with Root entry {
+        # 1. Grab the API key from your environment
+        api_key = os.environ.get("GEMINI_API_KEY");
+        if not api_key {
+            report {"error": "GEMINI_API_KEY is missing. Please set it in your terminal before running jac start."};
+            return;
         }
-    }
-}
 
-walker:priv ListTodos {
-    """List all todo items for the current user."""
-    has todos: list = [];
+        genai.configure(api_key=api_key);
 
-    can collect with Root entry {
-        visit [-->];
-    }
+        try {
+            # 2. Extract the raw video data from the base64 string
+            encoded_data = self.video_b64.split(",")[1];
+            video_data = base64.b64decode(encoded_data);
 
-    can gather with Todo entry {
-        self.todos.append(
-            {"id": here.id, "title": here.title, "completed": here.completed}
-        );
-    }
+            # 3. Save it to a temporary file
+            temp_file_path = "";
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as temp_video {
+                temp_video.write(video_data);
+                temp_file_path = temp_video.name;
+            }
 
-    can report_all with Root exit {
-        report self.todos ;
-    }
-}
+            # 4. Upload to the Gemini File API
+            video_file = genai.upload_file(path=temp_file_path);
 
-walker:priv ToggleTodo {
-    """Toggle a todo's completed status."""
-    has todo_id: str;
+            # 5. WAIT FOR PROCESSING (The Magic Fix)
+            # Gemini needs time to extract frames and audio before the LLM can see it.
+            while video_file.state.name == "PROCESSING" {
+                time.sleep(2);
+                video_file = genai.get_file(video_file.name);
+            }
+            
+            # Catch corrupted uploads
+            if video_file.state.name == "FAILED" {
+                report {"error": "Gemini failed to process the uploaded video."};
+                os.remove(temp_file_path);
+                return;
+            }
 
-    can search with Root entry {
-        visit [-->];
-    }
+            # 6. Prompt Gemini 1.5 Pro
+            model = genai.GenerativeModel("gemini-1.5-pro");
+            prompt = (
+                "You are an expert interview coach. " +
+                "The candidate is applying for the role of: " + self.role + ". " +
+                "They were asked this question: " + self.question + ". " +
+                "Review the attached video response. Evaluate their communication skills, " +
+                "clarity, and the technical accuracy of their answer. " +
+                "Provide highly actionable, constructive feedback in a clean, readable format."
+            );
 
-    can toggle with Todo entry {
-        if here.id == self.todo_id {
-            here.completed = not here.completed;
-            report {"id": here.id, "completed": here.completed} ;
-        }
-    }
-}
+            response = model.generate_content([prompt, video_file]);
 
-walker:priv DeleteTodo {
-    """Delete a todo item."""
-    has todo_id: str;
+            # 7. Clean up the temp file
+            os.remove(temp_file_path);
 
-    can search with Root entry {
-        visit [-->];
-    }
+            # 8. Send the AI's advice back to the frontend
+            report {"success": True, "feedback": response.text};
 
-    can delete with Todo entry {
-        if here.id == self.todo_id {
-            del here ;
-            report {"deleted": self.todo_id} ;
+        } except Exception as e {
+            report {"error": "Backend Error: " + str(e)};
         }
     }
 }
