@@ -2,6 +2,126 @@
 
 sv import from endpoints { SubmitInterview }
 
+# -------------------------
+# Auth handlers
+# -------------------------
+
+impl app.handleLogin -> None {
+    error = "";
+    if not username.trim() or not password {
+        error = "Please fill in all fields";
+        return;
+    }
+
+    loading = True;
+    success = await jacLogin(username, password);
+    loading = False;
+
+    if success {
+        isLoggedIn = True;
+        password = "";
+
+        if rememberMe {
+            localStorage.setItem("remembered_username", username);
+        } else {
+            localStorage.removeItem("remembered_username");
+        }
+
+        currentScreen = "home";
+    } else {
+        error = "Login failed";
+    }
+}
+
+impl app.handleSignup -> None {
+    error = "";
+    if not username.trim() or not password {
+        error = "Please fill in all fields";
+        return;
+    }
+    if password.length < 4 {
+        error = "Password must be at least 4 characters";
+        return;
+    }
+
+    loading = True;
+    result = await jacSignup(username, password);
+    loading = False;
+
+    if result and result["success"] {
+        # switch back to login mode
+        isSignup = False;
+        password = "";
+        error = "";
+    } else {
+        if result and result["error"] and result["error"]["message"] {
+            error = result["error"]["message"];
+        } else {
+            error = "Signup failed";
+        }
+    }
+}
+
+impl app.handleSubmit(e: any) -> None {
+    e.preventDefault();
+    if isSignup {
+        await handleSignup();
+    } else {
+        await handleLogin();
+    }
+}
+
+impl app.handleLogout -> None {
+    jacLogout();
+    isLoggedIn = False;
+
+    username = "";
+    password = "";
+    error = "";
+    loading = False;
+
+    # reset interview state
+    currentScreen = "auth";
+    roleTitle = "";
+    questionText = "";
+    adviceText = "";
+    cameraActive = False;
+    isRecording = False;
+    hasRecorded = False;
+    isAnalyzing = False;
+
+    eval("if (window.localStream) { window.localStream.getTracks().forEach(track => track.stop()); }");
+}
+
+impl app.handleNewInterview -> None {
+    # start flow
+    roleTitle = "";
+    questionText = "";
+    adviceText = "";
+    cameraActive = False;
+    isRecording = False;
+    hasRecorded = False;
+    isAnalyzing = False;
+
+    eval("if (window.localStream) { window.localStream.getTracks().forEach(track => track.stop()); }");
+
+    currentScreen = "role";
+}
+
+impl app.handleHome -> None {
+    currentScreen = "home";
+    roleTitle = "";
+    questionText = "";
+    adviceText = "";
+
+    cameraActive = False;
+    isRecording = False;
+    hasRecorded = False;
+    isAnalyzing = False;
+
+    eval("if (window.localStream) { window.localStream.getTracks().forEach(track => track.stop()); }");
+}
+
 impl app.handleRoleSubmit(e: any) -> None {
     e.preventDefault();
     if roleTitle.trim() != "" {
@@ -16,17 +136,9 @@ impl app.handleQuestionSubmit(e: any) -> None {
     }
 }
 
-impl app.handleHome -> None {
-    currentScreen = "role";
-    roleTitle = "";
-    questionText = "";
-    
-    cameraActive = False;
-    isRecording = False;
-    hasRecorded = False;
-    eval("if (window.localStream) { window.localStream.getTracks().forEach(track => track.stop()); }");
-}
-
+# -------------------------
+# Camera / recording
+# -------------------------
 # FIX: Removed the 'async' keyword here!
 impl app.startCamera -> None {
     status = await eval("""
@@ -131,6 +243,7 @@ impl app.getFeedback -> None {
     isAnalyzing = False;
 }
 
+# Don't print, just placeholders for now
 impl app.handleGiveFeedback -> None {
     print("User clicked Give Feedback");
 }
