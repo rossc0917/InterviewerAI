@@ -111,6 +111,13 @@ def:pub app {
         "right": "2rem"
     };
 
+    back_btn_style = {
+        **dark_btn_style,
+        "position": "absolute",
+        "top": "2rem",
+        "left": "2rem"
+    };
+
     input_style = {
         "width": "100%",
         "padding": "1rem",
@@ -260,6 +267,10 @@ def:pub app {
                 "fontFamily": "sans-serif"
             }}>
 
+                <button onClick={lambda -> None { currentScreen = "role"; }} style={back_btn_style}>
+                    Back
+                </button>
+
                 <button onClick={handleHome} style={home_btn_style}>Home</button>
 
                 <h1 style={{"fontSize": "2.5rem", "marginBottom": "2rem"}}>
@@ -311,6 +322,7 @@ def:pub app {
                         "backgroundColor": "#f0f0f0",
                         "border": "2px solid #333",
                         "borderRadius": "24px",
+                        "overflow": "hidden",
                         "display": "flex",
                         "justifyContent": "center",
                         "alignItems": "center",
@@ -325,6 +337,7 @@ def:pub app {
                                 "width": "100%",
                                 "height": "100%",
                                 "objectFit": "cover",
+                                "borderRadius": "inherit",
                                 "display": "none" if hasRecorded else "block"
                             }}
                         />
@@ -335,6 +348,7 @@ def:pub app {
                                 "width": "100%",
                                 "height": "100%",
                                 "objectFit": "cover",
+                                "borderRadius": "inherit",
                                 "display": "block" if hasRecorded else "none"
                             }}
                         />
@@ -378,7 +392,15 @@ def:pub app {
 
                         <div style={{
                             "whiteSpace": "pre-wrap",
-                            "minHeight": "200px"
+                            "minHeight": "200px",
+                            "padding": "1rem 1.25rem",
+                            "backgroundColor": "#f8f9fb",
+                            "border": "1px solid #d9dde5",
+                            "borderRadius": "12px",
+                            "lineHeight": "1.65",
+                            "fontSize": "1rem",
+                            "color": "#1f2937",
+                            "overflowY": "auto"
                         }}>
                             {adviceText if adviceText else "Record a video and request feedback."}
                         </div>
@@ -391,7 +413,7 @@ def:pub app {
                             >
                                 {"Analyzing..." if isAnalyzing else "Get Feedback"}
                             </button>
-                        ) if hasRecorded else None}
+                        ) if hasRecorded and (isAnalyzing or not adviceText) else None}
 
                     </div>
 

@@ -59,7 +59,13 @@ walker:pub SubmitInterview {
                 "They were asked this question: " + self.question + ". " +
                 "Review the attached video response. Evaluate their communication skills, " +
                 "clarity, and the technical accuracy of their answer. " +
-                "Provide highly actionable, constructive feedback in a clean, readable format."
+                "Provide highly actionable, constructive feedback in plain text only. " +
+                "Do not use markdown, bold markers, hash headings, or tables. " +
+                "Use this exact structure: " +
+                "Overall Assessment: short paragraph. " +
+                "Strengths: 2-4 bullet points starting with '- '. " +
+                "Areas to Improve: 2-4 bullet points starting with '- '. " +
+                "Next Practice Step: 1-2 sentences."
             );
 
             # NEW: Generation syntax
