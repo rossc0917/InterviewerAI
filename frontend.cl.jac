@@ -306,6 +306,24 @@ def:pub app {
                 <button onClick={handleHome} style={home_btn_style}>Home</button>
 
                 <div style={{
+                    "marginBottom": "2rem"
+                }}>
+                    <h1 style={{
+                        "fontSize": "2rem",
+                        "margin": "0 0 0.25rem 0"
+                    }}>
+                        {roleTitle if roleTitle else "Your interview role"}
+                    </h1>
+                    <p style={{
+                        "fontSize": "1.1rem",
+                        "color": "#4b5563",
+                        "margin": "0"
+                    }}>
+                        {questionText if questionText else "Your interview question will appear here."}
+                    </p>
+                </div>
+
+                <div style={{
                     "display": "flex",
                     "gap": "4rem",
                     "alignItems": "center"
