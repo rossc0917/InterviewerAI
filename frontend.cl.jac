@@ -111,6 +111,13 @@ def:pub app {
         "right": "2rem"
     };
 
+    back_btn_style = {
+        **dark_btn_style,
+        "position": "absolute",
+        "top": "2rem",
+        "left": "2rem"
+    };
+
     input_style = {
         "width": "100%",
         "padding": "1rem",
@@ -260,6 +267,10 @@ def:pub app {
                 "fontFamily": "sans-serif"
             }}>
 
+                <button onClick={lambda -> None { currentScreen = "role"; }} style={back_btn_style}>
+                    Back
+                </button>
+
                 <button onClick={handleHome} style={home_btn_style}>Home</button>
 
                 <h1 style={{"fontSize": "2.5rem", "marginBottom": "2rem"}}>
@@ -402,7 +413,7 @@ def:pub app {
                             >
                                 {"Analyzing..." if isAnalyzing else "Get Feedback"}
                             </button>
-                        ) if hasRecorded else None}
+                        ) if hasRecorded and (isAnalyzing or not adviceText) else None}
 
                     </div>
 
