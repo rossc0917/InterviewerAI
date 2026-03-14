@@ -311,6 +311,7 @@ def:pub app {
                         "backgroundColor": "#f0f0f0",
                         "border": "2px solid #333",
                         "borderRadius": "24px",
+                        "overflow": "hidden",
                         "display": "flex",
                         "justifyContent": "center",
                         "alignItems": "center",
@@ -325,6 +326,7 @@ def:pub app {
                                 "width": "100%",
                                 "height": "100%",
                                 "objectFit": "cover",
+                                "borderRadius": "inherit",
                                 "display": "none" if hasRecorded else "block"
                             }}
                         />
@@ -335,6 +337,7 @@ def:pub app {
                                 "width": "100%",
                                 "height": "100%",
                                 "objectFit": "cover",
+                                "borderRadius": "inherit",
                                 "display": "block" if hasRecorded else "none"
                             }}
                         />
@@ -378,7 +381,15 @@ def:pub app {
 
                         <div style={{
                             "whiteSpace": "pre-wrap",
-                            "minHeight": "200px"
+                            "minHeight": "200px",
+                            "padding": "1rem 1.25rem",
+                            "backgroundColor": "#f8f9fb",
+                            "border": "1px solid #d9dde5",
+                            "borderRadius": "12px",
+                            "lineHeight": "1.65",
+                            "fontSize": "1rem",
+                            "color": "#1f2937",
+                            "overflowY": "auto"
                         }}>
                             {adviceText if adviceText else "Record a video and request feedback."}
                         </div>
