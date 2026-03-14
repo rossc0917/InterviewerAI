@@ -2,6 +2,8 @@
 
 cl import from "@jac/runtime" { jacSignup, jacLogin, jacLogout, jacIsLoggedIn }
 cl import from .components.AuthForm { AuthForm }
+cl import "./assets/styles.css";
+
 
 def:pub app {
 
@@ -174,40 +176,33 @@ def:pub app {
     if currentScreen == "home" {
 
         return
-            <div style={{
-                "maxWidth": "700px",
-                "margin": "3rem auto",
-                "padding": "2rem",
-                "fontFamily": "sans-serif"
-            }}>
+            <div class="home-page">
 
-                <div style={{
-                    "display": "flex",
-                    "justifyContent": "space-between",
-                    "alignItems": "center",
-                    "marginBottom": "2rem"
-                }}>
-                    <h1>InterviewerAI</h1>
+                <div class="topbar">
+                    <div class="topbar-left">
+                        <img class="top-logo" src="/interviewerai-logo-full.png" />
+                    </div>
 
-                    <button onClick={handleLogout} style={dark_btn_style}>
-                        Log Out
-                    </button>
+                    <div class="topbar-center">
+                        <h1 class="home-title">InterviewerAI</h1>
+                    </div>
+
+                    <div class="topbar-right">
+                        <button onClick={handleLogout} class="logout-btn">
+                            Log Out
+                        </button>
+                    </div>
                 </div>
 
-                <div style={{"textAlign": "center"}}>
-
+                <div class="home-content">
                     <button
                         onClick={handleNewInterview}
-                        style={{
-                            **dark_btn_style,
-                            "padding": "1rem 2rem",
-                            "fontSize": "1.2rem"
-                        }}
+                        class="start-btn"
                     >
                         Start New Interview
                     </button>
-
                 </div>
+
             </div>;
     }
 
