@@ -166,6 +166,10 @@ impl app.handleHome -> None {
     loadInterviewHistory();
 }
 
+impl app.handleFinish -> None {
+    currentScreen = "interview_finished";
+}
+
 impl app.handleRoleSubmit(e: any) -> None {
     e.preventDefault();
     if roleTitle.trim() != "" {

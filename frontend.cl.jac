@@ -97,6 +97,7 @@ def:pub app {
     def handleViewHistoryById(id: str) -> None;
     def getClickHandler(id: str) -> any;
     def handleCloseHistory -> None;
+    def handleFinish -> None;
 
     async def startCamera -> None;
     def startRecording -> None;
@@ -283,14 +284,8 @@ def:pub app {
                         "transition": "all 0.2s ease"
                     }}
                 >
-                    <div style={{"fontWeight": "700", "fontSize": "1.05rem"}}>
-                        {ent["roleTitle"] if ent["roleTitle"] else "Interview"}
-                    </div>
-                    <div style={{"fontSize": "0.9rem", "color": "var(--text-muted)", "marginTop": "0.25rem"}}>
-                        {ent["questionText"] if ent["questionText"] else "—"}
-                    </div>
-                    <div style={{"fontSize": "0.8rem", "color": "var(--text-muted)", "marginTop": "0.5rem"}}>
-                        {eval("(function(t){ return t ? new Date(t).toLocaleDateString() + ' ' + new Date(t).toLocaleTimeString() : ''; })(" + str(ent["createdAt"]) + ")")}
+                    <div style={{"whiteSpace": "pre-wrap", "fontSize": "1rem", "lineHeight": "1.5"}}>
+                        {"Role: " + (ent["roleTitle"] if ent["roleTitle"] else "—") + "\nQuestion: " + (ent["questionText"] if ent["questionText"] else "—")}
                     </div>
                 </div>
             ];
@@ -422,6 +417,42 @@ def:pub app {
     }
 
     # ==============================
+    # INTERVIEW FINISHED SCREEN
+    # ==============================
+
+    if currentScreen == "interview_finished" {
+
+        return
+            <div class="home-page">
+                <div class="topbar">
+                    <div class="topbar-left">
+                        <img class="top-logo" src="/interviewerai-logo-full.png" />
+                    </div>
+                    <div class="topbar-center">
+                        <h1 class="home-title">InterviewerAI</h1>
+                    </div>
+                    <div class="topbar-right">
+                        <button onClick={handleLogout} class="logout-btn">Log Out</button>
+                    </div>
+                </div>
+                <div class="home-content" style={{"flexDirection": "column", "gap": "2rem"}}>
+                    <h2 style={{"fontSize": "2rem", "margin": "0", "textAlign": "center"}}>
+                        You've finished this practice session
+                    </h2>
+                    <p style={{"color": "var(--text-muted)", "textAlign": "center", "margin": "0"}}>
+                        You can go to the home page to see this interview in your history.
+                    </p>
+                    <button
+                        onClick={handleHome}
+                        class="start-btn"
+                    >
+                        Go to Home
+                    </button>
+                </div>
+            </div>;
+    }
+
+    # ==============================
     # INTERVIEW SCREEN
     # ==============================
 
@@ -437,17 +468,19 @@ def:pub app {
                 <button onClick={handleHome} style={home_btn_style}>Home</button>
 
                 <div style={{
-                    "marginBottom": "2rem"
+                    "marginBottom": "2rem",
+                    "color": "white"
                 }}>
                     <h1 style={{
                         "fontSize": "2rem",
-                        "margin": "0 0 0.25rem 0"
+                        "margin": "0 0 0.25rem 0",
+                        "color": "white"
                     }}>
                         {roleTitle if roleTitle else "Your interview role"}
                     </h1>
                     <p style={{
                         "fontSize": "1.1rem",
-                        "color": "#4b5563",
+                        "color": "white",
                         "margin": "0"
                     }}>
                         {questionText if questionText else "Your interview question will appear here."}
@@ -532,7 +565,7 @@ def:pub app {
 
                     <div style={{"flex": "1"}}>
 
-                        <h2>Advice</h2>
+                        <h2 style={{"color": "white"}}>Advice</h2>
 
                         <div style={{
                             "whiteSpace": "pre-wrap",
@@ -558,6 +591,15 @@ def:pub app {
                                 {"Analyzing..." if isAnalyzing else "Get Feedback"}
                             </button>
                         ) if hasRecorded and (isAnalyzing or not adviceText) else None}
+
+                        <div style={{"marginTop": "1.5rem"}}>
+                            <button
+                                onClick={handleFinish}
+                                style={{**dark_btn_style, "backgroundColor": "var(--accent)", "color": "#0f2742"}}
+                            >
+                                Finish
+                            </button>
+                        </div>
 
                     </div>
 
