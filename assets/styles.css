@@ -128,3 +128,9 @@ select:focus {
   color: #000000 !important;
   outline: none;
 }
+
+.history-item:hover {
+  background: var(--bg-soft) !important;
+  border-color: var(--accent) !important;
+  transform: translateY(-1px);
+}

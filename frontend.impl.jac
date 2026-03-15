@@ -71,6 +71,44 @@ impl app.handleSubmit(e: any) -> None {
     }
 }
 
+impl app.loadInterviewHistory -> None {
+    # Pass username into JS via global to avoid embedding in string
+    escaped = username.replace("\\", "\\\\").replace("'", "\\'");
+    eval("window.__jac_username = '" + escaped + "';");
+    interviewHistory = eval("""
+        (function() {
+            var h = JSON.parse(localStorage.getItem('interview_history') || '{}');
+            return h[window.__jac_username] || [];
+        })()
+    """);
+}
+
+impl app.handleViewHistory(entry: any) -> None {
+    selectedHistoryId = entry["id"];
+    selectedHistoryEntry = entry;
+}
+
+impl app.handleViewHistoryById(id: str) -> None {
+    i = 0;
+    while i < interviewHistory.length {
+        if interviewHistory[i]["id"] == id {
+            selectedHistoryEntry = interviewHistory[i];
+            selectedHistoryId = id;
+            return;
+        }
+        i = i + 1;
+    }
+}
+
+impl app.getClickHandler(id: str) -> any {
+    return lambda -> None { handleViewHistoryById(id); };
+}
+
+impl app.handleCloseHistory -> None {
+    selectedHistoryId = "";
+    selectedHistoryEntry = null;
+}
+
 impl app.handleLogout -> None {
     jacLogout();
     isLoggedIn = False;
@@ -89,6 +127,9 @@ impl app.handleLogout -> None {
     isRecording = False;
     hasRecorded = False;
     isAnalyzing = False;
+    interviewHistory = [];
+    selectedHistoryId = "";
+    selectedHistoryEntry = null;
 
     eval("if (window.localStream) { window.localStream.getTracks().forEach(track => track.stop()); }");
 }
@@ -110,6 +151,8 @@ impl app.handleNewInterview -> None {
 
 impl app.handleHome -> None {
     currentScreen = "home";
+    selectedHistoryId = "";
+    selectedHistoryEntry = null;
     roleTitle = "";
     questionText = "";
     adviceText = "";
@@ -120,6 +163,7 @@ impl app.handleHome -> None {
     isAnalyzing = False;
 
     eval("if (window.localStream) { window.localStream.getTracks().forEach(track => track.stop()); }");
+    loadInterviewHistory();
 }
 
 impl app.handleRoleSubmit(e: any) -> None {
@@ -233,6 +277,35 @@ impl app.getFeedback -> None {
     if response and response.reports and response.reports.length > 0 {
         if response.reports[0]["success"] {
             adviceText = response.reports[0]["feedback"];
+            # Pass values into JS for saving (escape for single-quoted string)
+            u_esc = username.replace("\\", "\\\\").replace("'", "\\'");
+            r_esc = roleTitle.replace("\\", "\\\\").replace("'", "\\'");
+            q_esc = questionText.replace("\\", "\\\\").replace("'", "\\'");
+            a_esc = adviceText.replace("\\", "\\\\").replace("'", "\\'").replace("\n", "\\n").replace("\r", "\\r");
+            eval("window.__jac_username = '" + u_esc + "';");
+            eval("window.__jac_roleTitle = '" + r_esc + "';");
+            eval("window.__jac_questionText = '" + q_esc + "';");
+            eval("window.__jac_adviceText = '" + a_esc + "';");
+            eval("window.__jac_videoDataUrl = '" + b64_string + "';");
+            # Save to interview history (role, question, video, feedback) for this user
+            eval("""
+                (function() {
+                    var u = window.__jac_username || '';
+                    var h = JSON.parse(localStorage.getItem('interview_history') || '{}');
+                    if (!h[u]) h[u] = [];
+                    var entry = {
+                        id: Date.now().toString(),
+                        roleTitle: window.__jac_roleTitle || '',
+                        questionText: window.__jac_questionText || '',
+                        adviceText: window.__jac_adviceText || '',
+                        videoDataUrl: window.__jac_videoDataUrl || '',
+                        createdAt: Date.now()
+                    };
+                    h[u].push(entry);
+                    if (h[u].length > 10) h[u] = h[u].slice(-10);
+                    try { localStorage.setItem('interview_history', JSON.stringify(h)); } catch (e) { console.warn('History save failed (quota?):', e); }
+                })()
+            """);
         } else {
             adviceText = "Error analyzing video: " + str(response.reports[0]["error"]);
         }

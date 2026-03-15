@@ -31,7 +31,10 @@ def:pub app {
         isRecording: bool = False,
         hasRecorded: bool = False,
         adviceText: str = "",
-        isAnalyzing: bool = False;
+        isAnalyzing: bool = False,
+        interviewHistory: any = [],
+        selectedHistoryId: str = "",
+        selectedHistoryEntry: any = null;
 
     # ==============================
     # INITIAL AUTH CHECK
@@ -66,6 +69,9 @@ def:pub app {
 
         currentScreen = ("home" if isLoggedIn else "auth");
         checkingAuth = False;
+        if isLoggedIn {
+            loadInterviewHistory();
+        }
     }
 
     # ==============================
@@ -85,6 +91,12 @@ def:pub app {
 
     def handleGiveFeedback -> None;
     def handleRefineAdvice -> None;
+
+    def loadInterviewHistory -> None;
+    def handleViewHistory(entry: any) -> None;
+    def handleViewHistoryById(id: str) -> None;
+    def getClickHandler(id: str) -> any;
+    def handleCloseHistory -> None;
 
     async def startCamera -> None;
     def startRecording -> None;
@@ -175,6 +187,116 @@ def:pub app {
 
     if currentScreen == "home" {
 
+        # History detail view (clicked a past interaction)
+        if selectedHistoryEntry {
+            ent = selectedHistoryEntry;
+            return
+                <div class="home-page" style={{"paddingBottom": "3rem"}}>
+                    <div class="topbar">
+                        <div class="topbar-left">
+                            <img class="top-logo" src="/interviewerai-logo-full.png" />
+                        </div>
+                        <div class="topbar-center">
+                            <h1 class="home-title">InterviewerAI</h1>
+                        </div>
+                        <div class="topbar-right">
+                            <button onClick={handleLogout} class="logout-btn">Log Out</button>
+                        </div>
+                    </div>
+                    <div style={{
+                        "padding": "2rem 4rem",
+                        "maxWidth": "1200px",
+                        "margin": "0 auto"
+                    }}>
+                        <button
+                            onClick={handleCloseHistory}
+                            style={{**back_btn_style, "position": "relative", "top": "0", "left": "0", "marginBottom": "1.5rem"}}
+                        >
+                            ← Back to Home
+                        </button>
+                        <div style={{"marginBottom": "1.5rem"}}>
+                            <h1 style={{"fontSize": "1.75rem", "margin": "0 0 0.25rem 0"}}>
+                                {ent["roleTitle"] if ent["roleTitle"] else "Role"}
+                            </h1>
+                            <p style={{"fontSize": "1rem", "color": "var(--text-muted)", "margin": "0"}}>
+                                {ent["questionText"] if ent["questionText"] else "Question"}
+                            </p>
+                        </div>
+                        <div style={{
+                            "display": "grid",
+                            "gridTemplateColumns": "1fr 1fr",
+                            "gap": "2rem",
+                            "alignItems": "start"
+                        }}>
+                            <div style={{
+                                "backgroundColor": "var(--panel)",
+                                "borderRadius": "12px",
+                                "overflow": "hidden",
+                                "aspectRatio": "16/10"
+                            }}>
+                                <video
+                                    src={ent["videoDataUrl"] if ent["videoDataUrl"] else ""}
+                                    controls={True}
+                                    style={{"width": "100%", "height": "100%", "objectFit": "contain"}}
+                                />
+                            </div>
+                            <div>
+                                <h2 style={{"fontSize": "1.25rem", "marginBottom": "0.75rem"}}>Feedback</h2>
+                                <div style={{
+                                    "whiteSpace": "pre-wrap",
+                                    "padding": "1rem 1.25rem",
+                                    "backgroundColor": "var(--panel)",
+                                    "border": "1px solid var(--border)",
+                                    "borderRadius": "12px",
+                                    "lineHeight": "1.65",
+                                    "fontSize": "1rem",
+                                    "color": "var(--text-main)",
+                                    "minHeight": "200px"
+                                }}>
+                                    {ent["adviceText"] if ent["adviceText"] else "No feedback saved."}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>;
+        }
+
+        # Build history list items (so each click handler is bound to the correct id)
+        historyItems = [];
+        i = 0;
+        while i < interviewHistory.length {
+            ent = interviewHistory[i];
+            id_val = ent["id"];
+            h = getClickHandler(id_val);
+            historyItems = historyItems + [
+                <div
+                    key={id_val}
+                    onClick={h}
+                    class="history-item"
+                    style={{
+                        "padding": "1rem 1.25rem",
+                        "marginBottom": "0.75rem",
+                        "backgroundColor": "var(--panel)",
+                        "border": "1px solid var(--border)",
+                        "borderRadius": "10px",
+                        "cursor": "pointer",
+                        "transition": "all 0.2s ease"
+                    }}
+                >
+                    <div style={{"fontWeight": "700", "fontSize": "1.05rem"}}>
+                        {ent["roleTitle"] if ent["roleTitle"] else "Interview"}
+                    </div>
+                    <div style={{"fontSize": "0.9rem", "color": "var(--text-muted)", "marginTop": "0.25rem"}}>
+                        {ent["questionText"] if ent["questionText"] else "—"}
+                    </div>
+                    <div style={{"fontSize": "0.8rem", "color": "var(--text-muted)", "marginTop": "0.5rem"}}>
+                        {eval("(function(t){ return t ? new Date(t).toLocaleDateString() + ' ' + new Date(t).toLocaleTimeString() : ''; })(" + str(ent["createdAt"]) + ")")}
+                    </div>
+                </div>
+            ];
+            i = i + 1;
+        }
+
         return
             <div class="home-page">
 
@@ -194,13 +316,22 @@ def:pub app {
                     </div>
                 </div>
 
-                <div class="home-content">
+                <div class="home-content" style={{"flexDirection": "column", "alignItems": "center", "gap": "2rem"}}>
                     <button
                         onClick={handleNewInterview}
                         class="start-btn"
                     >
                         Start New Interview
                     </button>
+
+                    <div style={{"width": "100%", "maxWidth": "600px"}}>
+                        <h2 style={{"fontSize": "1.5rem", "marginBottom": "1rem", "textAlign": "center"}}>
+                            Past interviews
+                        </h2>
+                        <div style={{"minHeight": "80px"}}>
+                            {historyItems if historyItems.length > 0 else <p style={{"color": "var(--text-muted)", "textAlign": "center"}}>No past interviews yet. Complete an interview and get feedback to see it here.</p>}
+                        </div>
+                    </div>
                 </div>
 
             </div>;
