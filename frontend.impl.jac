@@ -251,3 +251,56 @@ impl app.handleGiveFeedback -> None {
 impl app.handleRefineAdvice -> None {
     print("User clicked Refine Advice");
 }
+
+
+impl app.getFeedback -> None {
+    isAnalyzing = True;
+    
+    # Start the tip rotation logic
+    eval("""
+        (() => {
+            const updateTip = () => {
+                const tips = this.tipsBank;
+                const randomTip = tips[Math.floor(Math.random() * tips.length)];
+                this.currentTip = randomTip;
+            };
+            updateTip(); // Set first tip immediately
+            window.tipInterval = setInterval(updateTip, 10000); // Switch every 10 seconds
+        })()
+    """);
+
+    adviceText = "Preparing video for upload...";
+
+    b64_string = await eval(""" ... """); #
+
+    if b64_string.startsWith("ERROR:") {
+        adviceText = "Browser Error: " + str(b64_string);
+        isAnalyzing = False;
+        # Clear interval on error
+        eval("clearInterval(window.tipInterval);");
+        return;
+    }
+
+    adviceText = "Uploading video... Watch your terminal!";
+    
+    response = await root spawn SubmitInterview(
+        role=roleTitle, 
+        question=questionText, 
+        video_b64=b64_string
+    );
+
+    # Stop the interval once the response is received
+    eval("clearInterval(window.tipInterval);");
+
+    if response and response.reports and response.reports.length > 0 {
+        if response.reports[0]["success"] {
+            adviceText = response.reports[0]["feedback"];
+        } else {
+            adviceText = "Error analyzing video: " + str(response.reports[0]["error"]);
+        }
+    } else {
+        adviceText = "The server timed out. Check terminal logs!";
+    }
+    
+    isAnalyzing = False;
+}

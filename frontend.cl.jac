@@ -31,8 +31,64 @@ def:pub app {
         isRecording: bool = False,
         hasRecorded: bool = False,
         adviceText: str = "",
-        isAnalyzing: bool = False;
+        isAnalyzing: bool = False,
+        currentTip: str = "Preparing your feedback...",
+        tipTimer: any = None;
 
+
+    has tipsBank: list = [
+        "Take a deep breath. You're doing great!",
+        "Remember to maintain eye contact with the camera.",
+        "The STAR method (Situation, Task, Action, Result) is your best friend.",
+        "Keep your posture upright to project confidence.",
+        "Small pauses are okay; they show you are thinking.",
+        "Dress for the job you want, even in a mock interview.",
+        "Research the company's culture before the real thing.",
+        "Smile! It makes you sound more energetic and approachable.",
+        "Focus on your specific contributions in group projects.",
+        "Confidence comes from preparation.",
+        "Practice makes permanent. Keep recording!",
+        "Think of the interviewer as a future colleague, not an opponent.",
+        "Be specific. Use numbers and data to back up your achievements.",
+        "It's okay to ask for a moment to collect your thoughts.",
+        "Listen carefully to the question before you start answering.",
+        "Your unique perspective is your greatest strength.",
+        "Remember to mention not just what you did, but the impact it had.",
+        "Keep your background tidy for virtual interviews.",
+        "Pace yourself; speaking too fast can make you seem nervous.",
+        "Body language speaks louder than words.",
+        "Acknowledge your mistakes, but focus on what you learned from them.",
+        "Research your interviewers on LinkedIn if possible.",
+        "Have 2-3 questions ready to ask the interviewer.",
+        "Show enthusiasm for the role and the company.",
+        "Match your skills to the specific job description.",
+        "Confidence is silent; insecurities are loud. Stay calm.",
+        "Don't just list tasks—tell a story of growth.",
+        "Technical skills get you the interview; soft skills get you the job.",
+        "Be honest about your weaknesses, but show how you're improving.",
+        "Treat every mock interview as the real deal.",
+        "Your energy is contagious. Keep it positive!",
+        "Drink some water before you start to avoid a dry throat.",
+        "Ensure your lighting is in front of you, not behind you.",
+        "Preparation is the antidote to fear.",
+        "Focus on 'we' for teamwork, but 'I' for your specific actions.",
+        "Every 'no' is just a step closer to the right 'yes'.",
+        "Silence is better than 'um', 'uh', or 'like'.",
+        "Be authentic. People hire people, not resumes.",
+        "Visualize yourself succeeding before you press record.",
+        "Check your internet connection one last time.",
+        "Summarize your key points at the end of a long answer.",
+        "Relate your past experiences to the company's future goals.",
+        "Keep your answers concise—usually between 1 and 2 minutes.",
+        "Don't be afraid to show a little personality.",
+        "Answering 'I don't know' is better than making something up.",
+        "Reflect on your values and how they align with the role.",
+        "Think about your 'Greatest Hits'—your top 3 proudest moments.",
+        "The more you do this, the more natural it will feel.",
+        "You have the skills; now you just have to show them.",
+        "Believe in yourself. You’ve worked hard to get here!",
+        "You are a STAR!"
+    ];
     # ==============================
     # INITIAL AUTH CHECK
     # ==============================
@@ -415,7 +471,7 @@ def:pub app {
                             "color": "#1f2937",
                             "overflowY": "auto"
                         }}>
-                            {adviceText if adviceText else "Record a video and request feedback."}
+                            {currentTip if isAnalyzing else (adviceText if adviceText else "Record a video and request feedback.")}
                         </div>
 
                         {(
