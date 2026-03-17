@@ -83,9 +83,9 @@ impl app.loadInterviewHistory -> None {
     """);
 }
 
-impl app.handleViewHistory(entry: any) -> None {
-    selectedHistoryId = entry["id"];
-    selectedHistoryEntry = entry;
+impl app.handleViewHistory(historyEntry: any) -> None {
+    selectedHistoryId = historyEntry["id"];
+    selectedHistoryEntry = historyEntry;
 }
 
 impl app.handleViewHistoryById(id: str) -> None {

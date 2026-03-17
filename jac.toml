@@ -8,10 +8,10 @@ google = ">=0.0.0"
 google-genai = ">=0.0.0"
 
 [dependencies.npm]
-jac-client-node = "1.0.4"
+jac-client-node = "1.0.7"
 
 [dependencies.npm.dev]
-"@jac-client/dev-deps" = "1.0.0"
+"@jac-client/dev-deps" = "2.0.0"
 
 [serve]
 base_route_app = "app"

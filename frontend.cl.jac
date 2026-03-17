@@ -93,7 +93,7 @@ def:pub app {
     def handleRefineAdvice -> None;
 
     def loadInterviewHistory -> None;
-    def handleViewHistory(entry: any) -> None;
+    def handleViewHistory(historyEntry: any) -> None;
     def handleViewHistoryById(id: str) -> None;
     def getClickHandler(id: str) -> any;
     def handleCloseHistory -> None;
