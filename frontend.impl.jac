@@ -28,6 +28,9 @@ impl app.handleLogin -> None {
         }
 
         currentScreen = "home";
+        selectedHistoryId = "";
+        selectedHistoryEntry = null;
+        loadInterviewHistory();
     } else {
         error = "Login failed";
     }

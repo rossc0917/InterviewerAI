@@ -284,8 +284,13 @@ def:pub app {
                         "transition": "all 0.2s ease"
                     }}
                 >
-                    <div style={{"whiteSpace": "pre-wrap", "fontSize": "1rem", "lineHeight": "1.5"}}>
-                        {"Role: " + (ent["roleTitle"] if ent["roleTitle"] else "—") + "\nQuestion: " + (ent["questionText"] if ent["questionText"] else "—")}
+                    <div style={{"fontSize": "1rem", "lineHeight": "1.5"}}>
+                        <div>
+                            Role: {ent["roleTitle"] if ent["roleTitle"] else "—"}
+                        </div>
+                        <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)"}}>
+                            Question: {ent["questionText"] if ent["questionText"] else "—"}
+                        </div>
                     </div>
                 </div>
             ];
