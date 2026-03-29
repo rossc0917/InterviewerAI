@@ -93,10 +93,12 @@ impl app.handleViewHistory(entry: any) -> None {
 
 impl app.handleViewHistoryById(id: str) -> None {
     i = 0;
-    while i < interviewHistory.length {
-        if interviewHistory[i]["id"] == id {
-            selectedHistoryEntry = interviewHistory[i];
-            selectedHistoryId = id;
+    target = str(id);
+    hist = interviewHistory if interviewHistory else [];
+    while i < hist.length {
+        if str(hist[i]["id"]) == target {
+            selectedHistoryEntry = hist[i];
+            selectedHistoryId = target;
             return;
         }
         i = i + 1;

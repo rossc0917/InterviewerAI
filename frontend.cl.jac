@@ -262,40 +262,8 @@ def:pub app {
                 </div>;
         }
 
-        # Build history list items (so each click handler is bound to the correct id)
-        historyItems = [];
-        i = 0;
-        while i < interviewHistory.length {
-            ent = interviewHistory[i];
-            id_val = ent["id"];
-            h = getClickHandler(id_val);
-            historyItems = historyItems + [
-                <div
-                    key={id_val}
-                    onClick={h}
-                    class="history-item"
-                    style={{
-                        "padding": "1rem 1.25rem",
-                        "marginBottom": "0.75rem",
-                        "backgroundColor": "var(--panel)",
-                        "border": "1px solid var(--border)",
-                        "borderRadius": "10px",
-                        "cursor": "pointer",
-                        "transition": "all 0.2s ease"
-                    }}
-                >
-                    <div style={{"fontSize": "1rem", "lineHeight": "1.5"}}>
-                        <div>
-                            Role: {ent["roleTitle"] if ent["roleTitle"] else "—"}
-                        </div>
-                        <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)"}}>
-                            Question: {ent["questionText"] if ent["questionText"] else "—"}
-                        </div>
-                    </div>
-                </div>
-            ];
-            i = i + 1;
-        }
+        # Normalize for safer rendering
+        hist = interviewHistory if interviewHistory else [];
 
         return
             <div class="home-page">
@@ -329,7 +297,239 @@ def:pub app {
                             Past interviews
                         </h2>
                         <div style={{"minHeight": "80px"}}>
-                            {historyItems if historyItems.length > 0 else <p style={{"color": "var(--text-muted)", "textAlign": "center"}}>No past interviews yet. Complete an interview and get feedback to see it here.</p>}
+                            {(
+                                <div style={{"display": "flex", "flexDirection": "column", "gap": "0.75rem"}}>
+                                    {(
+                                        <button
+                                            onClick={getClickHandler(str(hist[0]["id"]))}
+                                            class="history-item"
+                                            style={{
+                                                **dark_btn_style,
+                                                "width": "100%",
+                                                "textAlign": "left",
+                                                "backgroundColor": "var(--panel)",
+                                                "border": "1px solid var(--border)",
+                                                "borderRadius": "10px",
+                                                "padding": "1rem 1.25rem"
+                                            }}
+                                        >
+                                            <div style={{"fontWeight": "800"}}>
+                                                {str(hist[0]["roleTitle"]) if hist[0]["roleTitle"] else "—"}
+                                            </div>
+                                            <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
+                                                {str(hist[0]["questionText"]) if hist[0]["questionText"] else "—"}
+                                            </div>
+                                        </button>
+                                    ) if hist.length > 0 else None}
+
+                                    {(
+                                        <button
+                                            onClick={getClickHandler(str(hist[1]["id"]))}
+                                            class="history-item"
+                                            style={{
+                                                **dark_btn_style,
+                                                "width": "100%",
+                                                "textAlign": "left",
+                                                "backgroundColor": "var(--panel)",
+                                                "border": "1px solid var(--border)",
+                                                "borderRadius": "10px",
+                                                "padding": "1rem 1.25rem"
+                                            }}
+                                        >
+                                            <div style={{"fontWeight": "800"}}>
+                                                {str(hist[1]["roleTitle"]) if hist[1]["roleTitle"] else "—"}
+                                            </div>
+                                            <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
+                                                {str(hist[1]["questionText"]) if hist[1]["questionText"] else "—"}
+                                            </div>
+                                        </button>
+                                    ) if hist.length > 1 else None}
+
+                                    {(
+                                        <button
+                                            onClick={getClickHandler(str(hist[2]["id"]))}
+                                            class="history-item"
+                                            style={{
+                                                **dark_btn_style,
+                                                "width": "100%",
+                                                "textAlign": "left",
+                                                "backgroundColor": "var(--panel)",
+                                                "border": "1px solid var(--border)",
+                                                "borderRadius": "10px",
+                                                "padding": "1rem 1.25rem"
+                                            }}
+                                        >
+                                            <div style={{"fontWeight": "800"}}>
+                                                {str(hist[2]["roleTitle"]) if hist[2]["roleTitle"] else "—"}
+                                            </div>
+                                            <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
+                                                {str(hist[2]["questionText"]) if hist[2]["questionText"] else "—"}
+                                            </div>
+                                        </button>
+                                    ) if hist.length > 2 else None}
+
+                                    {(
+                                        <button
+                                            onClick={getClickHandler(str(hist[3]["id"]))}
+                                            class="history-item"
+                                            style={{
+                                                **dark_btn_style,
+                                                "width": "100%",
+                                                "textAlign": "left",
+                                                "backgroundColor": "var(--panel)",
+                                                "border": "1px solid var(--border)",
+                                                "borderRadius": "10px",
+                                                "padding": "1rem 1.25rem"
+                                            }}
+                                        >
+                                            <div style={{"fontWeight": "800"}}>
+                                                {str(hist[3]["roleTitle"]) if hist[3]["roleTitle"] else "—"}
+                                            </div>
+                                            <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
+                                                {str(hist[3]["questionText"]) if hist[3]["questionText"] else "—"}
+                                            </div>
+                                        </button>
+                                    ) if hist.length > 3 else None}
+
+                                    {(
+                                        <button
+                                            onClick={getClickHandler(str(hist[4]["id"]))}
+                                            class="history-item"
+                                            style={{
+                                                **dark_btn_style,
+                                                "width": "100%",
+                                                "textAlign": "left",
+                                                "backgroundColor": "var(--panel)",
+                                                "border": "1px solid var(--border)",
+                                                "borderRadius": "10px",
+                                                "padding": "1rem 1.25rem"
+                                            }}
+                                        >
+                                            <div style={{"fontWeight": "800"}}>
+                                                {str(hist[4]["roleTitle"]) if hist[4]["roleTitle"] else "—"}
+                                            </div>
+                                            <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
+                                                {str(hist[4]["questionText"]) if hist[4]["questionText"] else "—"}
+                                            </div>
+                                        </button>
+                                    ) if hist.length > 4 else None}
+
+                                    {(
+                                        <button
+                                            onClick={getClickHandler(str(hist[5]["id"]))}
+                                            class="history-item"
+                                            style={{
+                                                **dark_btn_style,
+                                                "width": "100%",
+                                                "textAlign": "left",
+                                                "backgroundColor": "var(--panel)",
+                                                "border": "1px solid var(--border)",
+                                                "borderRadius": "10px",
+                                                "padding": "1rem 1.25rem"
+                                            }}
+                                        >
+                                            <div style={{"fontWeight": "800"}}>
+                                                {str(hist[5]["roleTitle"]) if hist[5]["roleTitle"] else "—"}
+                                            </div>
+                                            <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
+                                                {str(hist[5]["questionText"]) if hist[5]["questionText"] else "—"}
+                                            </div>
+                                        </button>
+                                    ) if hist.length > 5 else None}
+
+                                    {(
+                                        <button
+                                            onClick={getClickHandler(str(hist[6]["id"]))}
+                                            class="history-item"
+                                            style={{
+                                                **dark_btn_style,
+                                                "width": "100%",
+                                                "textAlign": "left",
+                                                "backgroundColor": "var(--panel)",
+                                                "border": "1px solid var(--border)",
+                                                "borderRadius": "10px",
+                                                "padding": "1rem 1.25rem"
+                                            }}
+                                        >
+                                            <div style={{"fontWeight": "800"}}>
+                                                {str(hist[6]["roleTitle"]) if hist[6]["roleTitle"] else "—"}
+                                            </div>
+                                            <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
+                                                {str(hist[6]["questionText"]) if hist[6]["questionText"] else "—"}
+                                            </div>
+                                        </button>
+                                    ) if hist.length > 6 else None}
+
+                                    {(
+                                        <button
+                                            onClick={getClickHandler(str(hist[7]["id"]))}
+                                            class="history-item"
+                                            style={{
+                                                **dark_btn_style,
+                                                "width": "100%",
+                                                "textAlign": "left",
+                                                "backgroundColor": "var(--panel)",
+                                                "border": "1px solid var(--border)",
+                                                "borderRadius": "10px",
+                                                "padding": "1rem 1.25rem"
+                                            }}
+                                        >
+                                            <div style={{"fontWeight": "800"}}>
+                                                {str(hist[7]["roleTitle"]) if hist[7]["roleTitle"] else "—"}
+                                            </div>
+                                            <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
+                                                {str(hist[7]["questionText"]) if hist[7]["questionText"] else "—"}
+                                            </div>
+                                        </button>
+                                    ) if hist.length > 7 else None}
+
+                                    {(
+                                        <button
+                                            onClick={getClickHandler(str(hist[8]["id"]))}
+                                            class="history-item"
+                                            style={{
+                                                **dark_btn_style,
+                                                "width": "100%",
+                                                "textAlign": "left",
+                                                "backgroundColor": "var(--panel)",
+                                                "border": "1px solid var(--border)",
+                                                "borderRadius": "10px",
+                                                "padding": "1rem 1.25rem"
+                                            }}
+                                        >
+                                            <div style={{"fontWeight": "800"}}>
+                                                {str(hist[8]["roleTitle"]) if hist[8]["roleTitle"] else "—"}
+                                            </div>
+                                            <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
+                                                {str(hist[8]["questionText"]) if hist[8]["questionText"] else "—"}
+                                            </div>
+                                        </button>
+                                    ) if hist.length > 8 else None}
+
+                                    {(
+                                        <button
+                                            onClick={getClickHandler(str(hist[9]["id"]))}
+                                            class="history-item"
+                                            style={{
+                                                **dark_btn_style,
+                                                "width": "100%",
+                                                "textAlign": "left",
+                                                "backgroundColor": "var(--panel)",
+                                                "border": "1px solid var(--border)",
+                                                "borderRadius": "10px",
+                                                "padding": "1rem 1.25rem"
+                                            }}
+                                        >
+                                            <div style={{"fontWeight": "800"}}>
+                                                {str(hist[9]["roleTitle"]) if hist[9]["roleTitle"] else "—"}
+                                            </div>
+                                            <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
+                                                {str(hist[9]["questionText"]) if hist[9]["questionText"] else "—"}
+                                            </div>
+                                        </button>
+                                    ) if hist.length > 9 else None}
+                                </div>
+                            ) if hist.length > 0 else <p style={{"color": "var(--text-muted)", "textAlign": "center"}}>No past interviews yet. Complete an interview and get feedback to see it here.</p>}
                         </div>
                     </div>
                 </div>
