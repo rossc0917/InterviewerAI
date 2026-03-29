@@ -301,7 +301,7 @@ def:pub app {
                                 <div style={{"display": "flex", "flexDirection": "column", "gap": "0.75rem"}}>
                                     {(
                                         <button
-                                            onClick={getClickHandler(str(hist[0]["id"]))}
+                                            onClick={getClickHandler(hist[0]["id"]))}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -314,17 +314,17 @@ def:pub app {
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
-                                                {str(hist[0]["roleTitle"]) if hist[0]["roleTitle"] else "—"}
+                                                {hist[0]["roleTitle"]) if hist[0]["roleTitle"] else "—"}
                                             </div>
                                             <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
-                                                {str(hist[0]["questionText"]) if hist[0]["questionText"] else "—"}
+                                                {hist[0]["questionText"]) if hist[0]["questionText"] else "—"}
                                             </div>
                                         </button>
                                     ) if hist.length > 0 else None}
 
                                     {(
                                         <button
-                                            onClick={getClickHandler(str(hist[1]["id"]))}
+                                            onClick={getClickHandler(hist[1]["id"]))}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -337,17 +337,17 @@ def:pub app {
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
-                                                {str(hist[1]["roleTitle"]) if hist[1]["roleTitle"] else "—"}
+                                                {hist[1]["roleTitle"]) if hist[1]["roleTitle"] else "—"}
                                             </div>
                                             <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
-                                                {str(hist[1]["questionText"]) if hist[1]["questionText"] else "—"}
+                                                {hist[1]["questionText"]) if hist[1]["questionText"] else "—"}
                                             </div>
                                         </button>
                                     ) if hist.length > 1 else None}
 
                                     {(
                                         <button
-                                            onClick={getClickHandler(str(hist[2]["id"]))}
+                                            onClick={getClickHandler(hist[2]["id"]))}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -360,17 +360,17 @@ def:pub app {
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
-                                                {str(hist[2]["roleTitle"]) if hist[2]["roleTitle"] else "—"}
+                                                {hist[2]["roleTitle"]) if hist[2]["roleTitle"] else "—"}
                                             </div>
                                             <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
-                                                {str(hist[2]["questionText"]) if hist[2]["questionText"] else "—"}
+                                                {hist[2]["questionText"]) if hist[2]["questionText"] else "—"}
                                             </div>
                                         </button>
                                     ) if hist.length > 2 else None}
 
                                     {(
                                         <button
-                                            onClick={getClickHandler(str(hist[3]["id"]))}
+                                            onClick={getClickHandler(hist[3]["id"]))}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -383,17 +383,17 @@ def:pub app {
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
-                                                {str(hist[3]["roleTitle"]) if hist[3]["roleTitle"] else "—"}
+                                                {hist[3]["roleTitle"]) if hist[3]["roleTitle"] else "—"}
                                             </div>
                                             <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
-                                                {str(hist[3]["questionText"]) if hist[3]["questionText"] else "—"}
+                                                {hist[3]["questionText"]) if hist[3]["questionText"] else "—"}
                                             </div>
                                         </button>
                                     ) if hist.length > 3 else None}
 
                                     {(
                                         <button
-                                            onClick={getClickHandler(str(hist[4]["id"]))}
+                                            onClick={getClickHandler(hist[4]["id"]))}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -406,17 +406,17 @@ def:pub app {
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
-                                                {str(hist[4]["roleTitle"]) if hist[4]["roleTitle"] else "—"}
+                                                {hist[4]["roleTitle"]) if hist[4]["roleTitle"] else "—"}
                                             </div>
                                             <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
-                                                {str(hist[4]["questionText"]) if hist[4]["questionText"] else "—"}
+                                                {hist[4]["questionText"]) if hist[4]["questionText"] else "—"}
                                             </div>
                                         </button>
                                     ) if hist.length > 4 else None}
 
                                     {(
                                         <button
-                                            onClick={getClickHandler(str(hist[5]["id"]))}
+                                            onClick={getClickHandler(hist[5]["id"]))}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -429,17 +429,17 @@ def:pub app {
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
-                                                {str(hist[5]["roleTitle"]) if hist[5]["roleTitle"] else "—"}
+                                                {hist[5]["roleTitle"]) if hist[5]["roleTitle"] else "—"}
                                             </div>
                                             <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
-                                                {str(hist[5]["questionText"]) if hist[5]["questionText"] else "—"}
+                                                {hist[5]["questionText"]) if hist[5]["questionText"] else "—"}
                                             </div>
                                         </button>
                                     ) if hist.length > 5 else None}
 
                                     {(
                                         <button
-                                            onClick={getClickHandler(str(hist[6]["id"]))}
+                                            onClick={getClickHandler(hist[6]["id"]))}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -452,17 +452,17 @@ def:pub app {
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
-                                                {str(hist[6]["roleTitle"]) if hist[6]["roleTitle"] else "—"}
+                                                {hist[6]["roleTitle"]) if hist[6]["roleTitle"] else "—"}
                                             </div>
                                             <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
-                                                {str(hist[6]["questionText"]) if hist[6]["questionText"] else "—"}
+                                                {hist[6]["questionText"]) if hist[6]["questionText"] else "—"}
                                             </div>
                                         </button>
                                     ) if hist.length > 6 else None}
 
                                     {(
                                         <button
-                                            onClick={getClickHandler(str(hist[7]["id"]))}
+                                            onClick={getClickHandler(hist[7]["id"]))}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -475,17 +475,17 @@ def:pub app {
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
-                                                {str(hist[7]["roleTitle"]) if hist[7]["roleTitle"] else "—"}
+                                                {hist[7]["roleTitle"]) if hist[7]["roleTitle"] else "—"}
                                             </div>
                                             <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
-                                                {str(hist[7]["questionText"]) if hist[7]["questionText"] else "—"}
+                                                {hist[7]["questionText"]) if hist[7]["questionText"] else "—"}
                                             </div>
                                         </button>
                                     ) if hist.length > 7 else None}
 
                                     {(
                                         <button
-                                            onClick={getClickHandler(str(hist[8]["id"]))}
+                                            onClick={getClickHandler(hist[8]["id"]))}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -498,17 +498,17 @@ def:pub app {
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
-                                                {str(hist[8]["roleTitle"]) if hist[8]["roleTitle"] else "—"}
+                                                {hist[8]["roleTitle"]) if hist[8]["roleTitle"] else "—"}
                                             </div>
                                             <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
-                                                {str(hist[8]["questionText"]) if hist[8]["questionText"] else "—"}
+                                                {hist[8]["questionText"]) if hist[8]["questionText"] else "—"}
                                             </div>
                                         </button>
                                     ) if hist.length > 8 else None}
 
                                     {(
                                         <button
-                                            onClick={getClickHandler(str(hist[9]["id"]))}
+                                            onClick={getClickHandler(hist[9]["id"]))}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -521,10 +521,10 @@ def:pub app {
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
-                                                {str(hist[9]["roleTitle"]) if hist[9]["roleTitle"] else "—"}
+                                                {hist[9]["roleTitle"]) if hist[9]["roleTitle"] else "—"}
                                             </div>
                                             <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
-                                                {str(hist[9]["questionText"]) if hist[9]["questionText"] else "—"}
+                                                {hist[9]["questionText"]) if hist[9]["questionText"] else "—"}
                                             </div>
                                         </button>
                                     ) if hist.length > 9 else None}
