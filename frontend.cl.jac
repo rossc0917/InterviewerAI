@@ -252,7 +252,7 @@ def:pub app {
                                     "color": "var(--text-main)",
                                     "minHeight": "200px"
                                 }}>
-                                    {ent["adviceText"] if ent["adviceText"] else "No feedback saved."}
+                                    {ent["adviceText"] if ent["adviceText"] else (ent["feedback"] if ent["feedback"] else "No feedback saved.")}
                                 </div>
                             </div>
                         </div>

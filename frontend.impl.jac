@@ -80,8 +80,26 @@ impl app.loadInterviewHistory -> None {
     eval("window.__jac_username = '" + escaped + "';");
     interviewHistory = eval("""
         (function() {
-            var h = JSON.parse(localStorage.getItem('interview_history') || '{}');
-            return h[window.__jac_username] || [];
+            try {
+                var h = JSON.parse(localStorage.getItem('interview_history') || '{}');
+                var raw = h[window.__jac_username] || [];
+                if (!Array.isArray(raw)) return [];
+                return raw.map(function(entry) {
+                    if (!entry || typeof entry !== 'object') return entry;
+                    return {
+                        id: entry.id || Date.now().toString(),
+                        roleTitle: entry.roleTitle || '',
+                        questionText: entry.questionText || '',
+                        adviceText: entry.adviceText || entry.feedback || '',
+                        feedback: entry.feedback || entry.adviceText || '',
+                        videoDataUrl: entry.videoDataUrl || '',
+                        createdAt: entry.createdAt || Date.now()
+                    };
+                });
+            } catch (e) {
+                console.error('Failed to load interview history', e);
+                return [];
+            }
         })()
     """);
 }
@@ -289,6 +307,7 @@ impl app.getFeedback -> None {
                         roleTitle: window.__jac_roleTitle || '',
                         questionText: window.__jac_questionText || '',
                         adviceText: window.__jac_adviceText || '',
+                        feedback: window.__jac_adviceText || '',
                         videoDataUrl: window.__jac_videoDataUrl || '',
                         createdAt: Date.now()
                     };
