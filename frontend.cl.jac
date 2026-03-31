@@ -94,7 +94,6 @@ def:pub app {
 
     def loadInterviewHistory -> None;
     def handleViewHistory(entry: any) -> None;
-    def handleViewHistoryById(id: str) -> None;
     def handleCloseHistory -> None;
     def handleFinish -> None;
 
@@ -299,9 +298,8 @@ def:pub app {
                             {(
                                 <div style={{"display": "flex", "flexDirection": "column", "gap": "0.75rem"}}>
                                     {(
-                                        <button
-                                            type="button"
-                                            onClick={lambda e: any -> None { handleViewHistoryById(hist[0]["id"]); }}
+                                        <div
+                                            onClick={lambda e: any -> None { handleViewHistory(hist[0]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -323,13 +321,12 @@ def:pub app {
                                             <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
                                                 {hist[0]["questionText"] if hist[0]["questionText"] else "—"}
                                             </div>
-                                        </button>
+                                        </div>
                                     ) if hist.length > 0 else None}
 
                                     {(
-                                        <button
-                                            type="button"
-                                            onClick={lambda e: any -> None { handleViewHistoryById(hist[1]["id"]); }}
+                                        <div
+                                            onClick={lambda e: any -> None { handleViewHistory(hist[1]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -351,13 +348,12 @@ def:pub app {
                                             <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
                                                 {hist[1]["questionText"] if hist[1]["questionText"] else "—"}
                                             </div>
-                                        </button>
+                                        </div>
                                     ) if hist.length > 1 else None}
 
                                     {(
-                                        <button
-                                            type="button"
-                                            onClick={lambda e: any -> None { handleViewHistoryById(hist[2]["id"]); }}
+                                        <div
+                                            onClick={lambda e: any -> None { handleViewHistory(hist[2]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -379,13 +375,12 @@ def:pub app {
                                             <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
                                                 {hist[2]["questionText"] if hist[2]["questionText"] else "—"}
                                             </div>
-                                        </button>
+                                        </div>
                                     ) if hist.length > 2 else None}
 
                                     {(
-                                        <button
-                                            type="button"
-                                            onClick={lambda e: any -> None { handleViewHistoryById(hist[3]["id"]); }}
+                                        <div
+                                            onClick={lambda e: any -> None { handleViewHistory(hist[3]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -407,13 +402,12 @@ def:pub app {
                                             <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
                                                 {hist[3]["questionText"] if hist[3]["questionText"] else "—"}
                                             </div>
-                                        </button>
+                                        </div>
                                     ) if hist.length > 3 else None}
 
                                     {(
-                                        <button
-                                            type="button"
-                                            onClick={lambda e: any -> None { handleViewHistoryById(hist[4]["id"]); }}
+                                        <div
+                                            onClick={lambda e: any -> None { handleViewHistory(hist[4]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -435,13 +429,12 @@ def:pub app {
                                             <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
                                                 {hist[4]["questionText"] if hist[4]["questionText"] else "—"}
                                             </div>
-                                        </button>
+                                        </div>
                                     ) if hist.length > 4 else None}
 
                                     {(
-                                        <button
-                                            type="button"
-                                            onClick={lambda e: any -> None { handleViewHistoryById(hist[5]["id"]); }}
+                                        <div
+                                            onClick={lambda e: any -> None { handleViewHistory(hist[5]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -463,13 +456,12 @@ def:pub app {
                                             <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
                                                 {hist[5]["questionText"] if hist[5]["questionText"] else "—"}
                                             </div>
-                                        </button>
+                                        </div>
                                     ) if hist.length > 5 else None}
 
                                     {(
-                                        <button
-                                            type="button"
-                                            onClick={lambda e: any -> None { handleViewHistoryById(hist[6]["id"]); }}
+                                        <div
+                                            onClick={lambda e: any -> None { handleViewHistory(hist[6]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -491,13 +483,12 @@ def:pub app {
                                             <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
                                                 {hist[6]["questionText"] if hist[6]["questionText"] else "—"}
                                             </div>
-                                        </button>
+                                        </div>
                                     ) if hist.length > 6 else None}
 
                                     {(
-                                        <button
-                                            type="button"
-                                            onClick={lambda e: any -> None { handleViewHistoryById(hist[7]["id"]); }}
+                                        <div
+                                            onClick={lambda e: any -> None { handleViewHistory(hist[7]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -519,13 +510,12 @@ def:pub app {
                                             <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
                                                 {hist[7]["questionText"] if hist[7]["questionText"] else "—"}
                                             </div>
-                                        </button>
+                                        </div>
                                     ) if hist.length > 7 else None}
 
                                     {(
-                                        <button
-                                            type="button"
-                                            onClick={lambda e: any -> None { handleViewHistoryById(hist[8]["id"]); }}
+                                        <div
+                                            onClick={lambda e: any -> None { handleViewHistory(hist[8]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -547,13 +537,12 @@ def:pub app {
                                             <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
                                                 {hist[8]["questionText"] if hist[8]["questionText"] else "—"}
                                             </div>
-                                        </button>
+                                        </div>
                                     ) if hist.length > 8 else None}
 
                                     {(
-                                        <button
-                                            type="button"
-                                            onClick={lambda e: any -> None { handleViewHistoryById(hist[9]["id"]); }}
+                                        <div
+                                            onClick={lambda e: any -> None { handleViewHistory(hist[9]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -575,7 +564,7 @@ def:pub app {
                                             <div style={{"marginTop": "0.25rem", "color": "var(--text-muted)", "fontWeight": "600"}}>
                                                 {hist[9]["questionText"] if hist[9]["questionText"] else "—"}
                                             </div>
-                                        </button>
+                                        </div>
                                     ) if hist.length > 9 else None}
                                 </div>
                             ) if hist.length > 0 else <p style={{"color": "var(--text-muted)", "textAlign": "center"}}>No past interviews yet. Complete an interview and get feedback to see it here.</p>}
