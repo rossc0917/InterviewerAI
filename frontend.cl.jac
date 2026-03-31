@@ -291,16 +291,17 @@ def:pub app {
                         Start New Interview
                     </button>
 
-                    <div style={{"width": "100%", "maxWidth": "600px"}}>
+                    <div style={{"width": "100%", "maxWidth": "600px", "position": "relative", "zIndex": "2"}}>
                         <h2 style={{"fontSize": "1.5rem", "marginBottom": "1rem", "textAlign": "center"}}>
                             Past interviews
                         </h2>
-                        <div style={{"minHeight": "80px"}}>
+                        <div style={{"minHeight": "80px", "position": "relative", "zIndex": "2", "pointerEvents": "auto"}}>
                             {(
                                 <div style={{"display": "flex", "flexDirection": "column", "gap": "0.75rem"}}>
                                     {(
                                         <button
-                                            onClick={lambda -> None { handleViewHistoryById(hist[0]["id"]); }}
+                                            type="button"
+                                            onClick={lambda e: any -> None { handleViewHistoryById(hist[0]["id"]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -312,7 +313,8 @@ def:pub app {
                                                 "padding": "1rem 1.25rem",
                                                 "cursor": "pointer",
                                                 "position": "relative",
-                                                "zIndex": "1"
+                                                "zIndex": "3",
+                                                "pointerEvents": "auto"
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
@@ -326,7 +328,8 @@ def:pub app {
 
                                     {(
                                         <button
-                                            onClick={lambda -> None { handleViewHistoryById(hist[1]["id"]); }}
+                                            type="button"
+                                            onClick={lambda e: any -> None { handleViewHistoryById(hist[1]["id"]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -338,7 +341,8 @@ def:pub app {
                                                 "padding": "1rem 1.25rem",
                                                 "cursor": "pointer",
                                                 "position": "relative",
-                                                "zIndex": "1"
+                                                "zIndex": "3",
+                                                "pointerEvents": "auto"
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
@@ -352,7 +356,8 @@ def:pub app {
 
                                     {(
                                         <button
-                                            onClick={lambda -> None { handleViewHistoryById(hist[2]["id"]); }}
+                                            type="button"
+                                            onClick={lambda e: any -> None { handleViewHistoryById(hist[2]["id"]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -364,7 +369,8 @@ def:pub app {
                                                 "padding": "1rem 1.25rem",
                                                 "cursor": "pointer",
                                                 "position": "relative",
-                                                "zIndex": "1"
+                                                "zIndex": "3",
+                                                "pointerEvents": "auto"
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
@@ -378,7 +384,8 @@ def:pub app {
 
                                     {(
                                         <button
-                                            onClick={lambda -> None { handleViewHistoryById(hist[3]["id"]); }}
+                                            type="button"
+                                            onClick={lambda e: any -> None { handleViewHistoryById(hist[3]["id"]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -390,7 +397,8 @@ def:pub app {
                                                 "padding": "1rem 1.25rem",
                                                 "cursor": "pointer",
                                                 "position": "relative",
-                                                "zIndex": "1"
+                                                "zIndex": "3",
+                                                "pointerEvents": "auto"
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
@@ -404,7 +412,8 @@ def:pub app {
 
                                     {(
                                         <button
-                                            onClick={lambda -> None { handleViewHistoryById(hist[4]["id"]); }}
+                                            type="button"
+                                            onClick={lambda e: any -> None { handleViewHistoryById(hist[4]["id"]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -416,7 +425,8 @@ def:pub app {
                                                 "padding": "1rem 1.25rem",
                                                 "cursor": "pointer",
                                                 "position": "relative",
-                                                "zIndex": "1"
+                                                "zIndex": "3",
+                                                "pointerEvents": "auto"
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
@@ -430,7 +440,8 @@ def:pub app {
 
                                     {(
                                         <button
-                                            onClick={lambda -> None { handleViewHistoryById(hist[5]["id"]); }}
+                                            type="button"
+                                            onClick={lambda e: any -> None { handleViewHistoryById(hist[5]["id"]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -442,7 +453,8 @@ def:pub app {
                                                 "padding": "1rem 1.25rem",
                                                 "cursor": "pointer",
                                                 "position": "relative",
-                                                "zIndex": "1"
+                                                "zIndex": "3",
+                                                "pointerEvents": "auto"
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
@@ -456,7 +468,8 @@ def:pub app {
 
                                     {(
                                         <button
-                                            onClick={lambda -> None { handleViewHistoryById(hist[6]["id"]); }}
+                                            type="button"
+                                            onClick={lambda e: any -> None { handleViewHistoryById(hist[6]["id"]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -468,7 +481,8 @@ def:pub app {
                                                 "padding": "1rem 1.25rem",
                                                 "cursor": "pointer",
                                                 "position": "relative",
-                                                "zIndex": "1"
+                                                "zIndex": "3",
+                                                "pointerEvents": "auto"
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
@@ -482,7 +496,8 @@ def:pub app {
 
                                     {(
                                         <button
-                                            onClick={lambda -> None { handleViewHistoryById(hist[7]["id"]); }}
+                                            type="button"
+                                            onClick={lambda e: any -> None { handleViewHistoryById(hist[7]["id"]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -494,7 +509,8 @@ def:pub app {
                                                 "padding": "1rem 1.25rem",
                                                 "cursor": "pointer",
                                                 "position": "relative",
-                                                "zIndex": "1"
+                                                "zIndex": "3",
+                                                "pointerEvents": "auto"
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
@@ -508,7 +524,8 @@ def:pub app {
 
                                     {(
                                         <button
-                                            onClick={lambda -> None { handleViewHistoryById(hist[8]["id"]); }}
+                                            type="button"
+                                            onClick={lambda e: any -> None { handleViewHistoryById(hist[8]["id"]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -520,7 +537,8 @@ def:pub app {
                                                 "padding": "1rem 1.25rem",
                                                 "cursor": "pointer",
                                                 "position": "relative",
-                                                "zIndex": "1"
+                                                "zIndex": "3",
+                                                "pointerEvents": "auto"
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
@@ -534,7 +552,8 @@ def:pub app {
 
                                     {(
                                         <button
-                                            onClick={lambda -> None { handleViewHistoryById(hist[9]["id"]); }}
+                                            type="button"
+                                            onClick={lambda e: any -> None { handleViewHistoryById(hist[9]["id"]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -546,7 +565,8 @@ def:pub app {
                                                 "padding": "1rem 1.25rem",
                                                 "cursor": "pointer",
                                                 "position": "relative",
-                                                "zIndex": "1"
+                                                "zIndex": "3",
+                                                "pointerEvents": "auto"
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
