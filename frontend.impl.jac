@@ -105,10 +105,6 @@ impl app.handleViewHistoryById(id: str) -> None {
     }
 }
 
-impl app.getClickHandler(id: str) -> any {
-    return lambda -> None { handleViewHistoryById(id); };
-}
-
 impl app.handleCloseHistory -> None {
     selectedHistoryId = "";
     selectedHistoryEntry = null;

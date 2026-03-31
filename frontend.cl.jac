@@ -95,7 +95,6 @@ def:pub app {
     def loadInterviewHistory -> None;
     def handleViewHistory(entry: any) -> None;
     def handleViewHistoryById(id: str) -> None;
-    def getClickHandler(id: str) -> any;
     def handleCloseHistory -> None;
     def handleFinish -> None;
 
@@ -301,7 +300,7 @@ def:pub app {
                                 <div style={{"display": "flex", "flexDirection": "column", "gap": "0.75rem"}}>
                                     {(
                                         <button
-                                            onClick={getClickHandler(hist[0]["id"])}
+                                            onClick={lambda -> None { handleViewHistoryById(hist[0]["id"]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -310,7 +309,10 @@ def:pub app {
                                                 "backgroundColor": "var(--panel)",
                                                 "border": "1px solid var(--border)",
                                                 "borderRadius": "10px",
-                                                "padding": "1rem 1.25rem"
+                                                "padding": "1rem 1.25rem",
+                                                "cursor": "pointer",
+                                                "position": "relative",
+                                                "zIndex": "1"
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
@@ -324,7 +326,7 @@ def:pub app {
 
                                     {(
                                         <button
-                                            onClick={getClickHandler(hist[1]["id"])}
+                                            onClick={lambda -> None { handleViewHistoryById(hist[1]["id"]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -333,7 +335,10 @@ def:pub app {
                                                 "backgroundColor": "var(--panel)",
                                                 "border": "1px solid var(--border)",
                                                 "borderRadius": "10px",
-                                                "padding": "1rem 1.25rem"
+                                                "padding": "1rem 1.25rem",
+                                                "cursor": "pointer",
+                                                "position": "relative",
+                                                "zIndex": "1"
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
@@ -347,7 +352,7 @@ def:pub app {
 
                                     {(
                                         <button
-                                            onClick={getClickHandler(hist[2]["id"])}
+                                            onClick={lambda -> None { handleViewHistoryById(hist[2]["id"]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -356,7 +361,10 @@ def:pub app {
                                                 "backgroundColor": "var(--panel)",
                                                 "border": "1px solid var(--border)",
                                                 "borderRadius": "10px",
-                                                "padding": "1rem 1.25rem"
+                                                "padding": "1rem 1.25rem",
+                                                "cursor": "pointer",
+                                                "position": "relative",
+                                                "zIndex": "1"
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
@@ -370,7 +378,7 @@ def:pub app {
 
                                     {(
                                         <button
-                                            onClick={getClickHandler(hist[3]["id"])}
+                                            onClick={lambda -> None { handleViewHistoryById(hist[3]["id"]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -379,7 +387,10 @@ def:pub app {
                                                 "backgroundColor": "var(--panel)",
                                                 "border": "1px solid var(--border)",
                                                 "borderRadius": "10px",
-                                                "padding": "1rem 1.25rem"
+                                                "padding": "1rem 1.25rem",
+                                                "cursor": "pointer",
+                                                "position": "relative",
+                                                "zIndex": "1"
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
@@ -393,7 +404,7 @@ def:pub app {
 
                                     {(
                                         <button
-                                            onClick={getClickHandler(hist[4]["id"])}
+                                            onClick={lambda -> None { handleViewHistoryById(hist[4]["id"]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -402,7 +413,10 @@ def:pub app {
                                                 "backgroundColor": "var(--panel)",
                                                 "border": "1px solid var(--border)",
                                                 "borderRadius": "10px",
-                                                "padding": "1rem 1.25rem"
+                                                "padding": "1rem 1.25rem",
+                                                "cursor": "pointer",
+                                                "position": "relative",
+                                                "zIndex": "1"
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
@@ -416,7 +430,7 @@ def:pub app {
 
                                     {(
                                         <button
-                                            onClick={getClickHandler(hist[5]["id"])}
+                                            onClick={lambda -> None { handleViewHistoryById(hist[5]["id"]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -425,7 +439,10 @@ def:pub app {
                                                 "backgroundColor": "var(--panel)",
                                                 "border": "1px solid var(--border)",
                                                 "borderRadius": "10px",
-                                                "padding": "1rem 1.25rem"
+                                                "padding": "1rem 1.25rem",
+                                                "cursor": "pointer",
+                                                "position": "relative",
+                                                "zIndex": "1"
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
@@ -439,7 +456,7 @@ def:pub app {
 
                                     {(
                                         <button
-                                            onClick={getClickHandler(hist[6]["id"])}
+                                            onClick={lambda -> None { handleViewHistoryById(hist[6]["id"]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -448,7 +465,10 @@ def:pub app {
                                                 "backgroundColor": "var(--panel)",
                                                 "border": "1px solid var(--border)",
                                                 "borderRadius": "10px",
-                                                "padding": "1rem 1.25rem"
+                                                "padding": "1rem 1.25rem",
+                                                "cursor": "pointer",
+                                                "position": "relative",
+                                                "zIndex": "1"
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
@@ -462,7 +482,7 @@ def:pub app {
 
                                     {(
                                         <button
-                                            onClick={getClickHandler(hist[7]["id"])}
+                                            onClick={lambda -> None { handleViewHistoryById(hist[7]["id"]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -471,7 +491,10 @@ def:pub app {
                                                 "backgroundColor": "var(--panel)",
                                                 "border": "1px solid var(--border)",
                                                 "borderRadius": "10px",
-                                                "padding": "1rem 1.25rem"
+                                                "padding": "1rem 1.25rem",
+                                                "cursor": "pointer",
+                                                "position": "relative",
+                                                "zIndex": "1"
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
@@ -485,7 +508,7 @@ def:pub app {
 
                                     {(
                                         <button
-                                            onClick={getClickHandler(hist[8]["id"])}
+                                            onClick={lambda -> None { handleViewHistoryById(hist[8]["id"]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -494,7 +517,10 @@ def:pub app {
                                                 "backgroundColor": "var(--panel)",
                                                 "border": "1px solid var(--border)",
                                                 "borderRadius": "10px",
-                                                "padding": "1rem 1.25rem"
+                                                "padding": "1rem 1.25rem",
+                                                "cursor": "pointer",
+                                                "position": "relative",
+                                                "zIndex": "1"
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
@@ -508,7 +534,7 @@ def:pub app {
 
                                     {(
                                         <button
-                                            onClick={getClickHandler(hist[9]["id"])}
+                                            onClick={lambda -> None { handleViewHistoryById(hist[9]["id"]); }}
                                             class="history-item"
                                             style={{
                                                 **dark_btn_style,
@@ -517,7 +543,10 @@ def:pub app {
                                                 "backgroundColor": "var(--panel)",
                                                 "border": "1px solid var(--border)",
                                                 "borderRadius": "10px",
-                                                "padding": "1rem 1.25rem"
+                                                "padding": "1rem 1.25rem",
+                                                "cursor": "pointer",
+                                                "position": "relative",
+                                                "zIndex": "1"
                                             }}
                                         >
                                             <div style={{"fontWeight": "800"}}>
