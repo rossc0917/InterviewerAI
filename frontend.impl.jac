@@ -286,11 +286,13 @@ impl app.getFeedback -> None {
     if response and response.reports and response.reports.length > 0 {
         if response.reports[0]["success"] {
             adviceText = response.reports[0]["feedback"];
-            # Pass values into JS for saving (escape for single-quoted string)
-            u_esc = username.replace("\\", "\\\\").replace("'", "\\'");
-            r_esc = roleTitle.replace("\\", "\\\\").replace("'", "\\'");
-            q_esc = questionText.replace("\\", "\\\\").replace("'", "\\'");
-            a_esc = adviceText.replace("\\", "\\\\").replace("'", "\\'").replace("\n", "\\n").replace("\r", "\\r");
+            # Pass values into JS for saving.
+            # Use replaceAll so multiline feedback with multiple quotes/newlines
+            # survives serialization into the eval string.
+            u_esc = username.replaceAll("\\", "\\\\").replaceAll("'", "\\'");
+            r_esc = roleTitle.replaceAll("\\", "\\\\").replaceAll("'", "\\'");
+            q_esc = questionText.replaceAll("\\", "\\\\").replaceAll("'", "\\'");
+            a_esc = adviceText.replaceAll("\\", "\\\\").replaceAll("'", "\\'").replaceAll("\n", "\\n").replaceAll("\r", "\\r");
             eval("window.__jac_username = '" + u_esc + "';");
             eval("window.__jac_roleTitle = '" + r_esc + "';");
             eval("window.__jac_questionText = '" + q_esc + "';");
@@ -316,6 +318,7 @@ impl app.getFeedback -> None {
                     try { localStorage.setItem('interview_history', JSON.stringify(h)); } catch (e) { console.warn('History save failed (quota?):', e); }
                 })()
             """);
+            loadInterviewHistory();
         } else {
             adviceText = "Error analyzing video: " + str(response.reports[0]["error"]);
         }
