@@ -85,8 +85,37 @@ impl app.resetRecording -> None {
 
 impl app.getFeedback -> None {
     isAnalyzing = True;
+<<<<<<< Updated upstream
     adviceText = "Preparing video for upload...";
 
+=======
+    adviceText = "Analyzing your communication skills...";
+
+    # 1. Start the tip rotation safely!
+    eval("""
+        (() => {
+            const localTipsBank = [
+                "Analyzing your communication skills...",
+                "Reviewing technical accuracy...",
+                "Evaluating tone and confidence..."
+            ];
+            
+            let tipIndex = 0;
+            // Save interval to window so we can stop it later
+            window.tipInterval = setInterval(() => {
+                tipIndex = (tipIndex + 1) % localTipsBank.length;
+                
+                // Safety check: Only update if you eventually add id="advice-box" to your UI
+                let adviceBox = document.getElementById('advice-box');
+                if (adviceBox) {
+                    adviceBox.innerText = localTipsBank[tipIndex];
+                }
+            }, 3000); // 3 seconds feels snappier than 10!
+        })();
+    """);
+
+    # 2. Package the video
+>>>>>>> Stashed changes
     b64_string = await eval("""
         new Promise((resolve) => {
             try {
@@ -107,17 +136,29 @@ impl app.getFeedback -> None {
     if b64_string.startsWith("ERROR:") {
         adviceText = "Browser Error: " + str(b64_string);
         isAnalyzing = False;
+<<<<<<< Updated upstream
         return;
     }
 
     adviceText = "Uploading video... Watch your terminal to see the live progress!";
 
+=======
+        eval("if (window.tipInterval) clearInterval(window.tipInterval);"); # Stop tips!
+        return;
+    }
+
+    # 3. Send to Server
+>>>>>>> Stashed changes
     response = await root spawn SubmitInterview(
         role=roleTitle, 
         question=questionText, 
         video_b64=b64_string
     );
 
+<<<<<<< Updated upstream
+=======
+    # 4. Handle Response
+>>>>>>> Stashed changes
     if response and response.reports and response.reports.length > 0 {
         if response.reports[0]["success"] {
             adviceText = response.reports[0]["feedback"];
@@ -129,6 +170,7 @@ impl app.getFeedback -> None {
     }
     
     isAnalyzing = False;
+<<<<<<< Updated upstream
 }
 
 impl app.handleGiveFeedback -> None {
@@ -137,4 +179,9 @@ impl app.handleGiveFeedback -> None {
 
 impl app.handleRefineAdvice -> None {
     print("User clicked Refine Advice");
+=======
+    
+    # 5. Stop the loading tips!
+    eval("if (window.tipInterval) clearInterval(window.tipInterval);");
+>>>>>>> Stashed changes
 }
