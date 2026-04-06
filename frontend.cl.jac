@@ -571,7 +571,42 @@ def:pub app {
                         </div>
                     </div>
                 </div>
+                <a
+                    href="https://www.jaseci.org/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                        position: "fixed",
+                        bottom: "16px",
+                        right: "20px",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.6rem",
+                        padding: "0.5rem 0.75rem",
+                        backgroundColor: "rgba(0,0,0,0.6)",
+                        border: "1px solid var(--border)",
+                        borderRadius: "10px",
+                        textDecoration: "none",
+                        zIndex: 10
+                    }}
+                >
+                    <span style={{
+                        fontSize: "0.95rem",
+                        color: "#ffffff",
+                        fontWeight: "600"
+                    }}>
+                        Built with
+                    </span>
 
+                    <img
+                        src="/jaseci-logo.png"
+                        alt="Jaseci"
+                        style={{
+                            height: "22px",
+                            objectFit: "contain"
+                        }}
+                    />
+                </a>
             </div>;
     }
 
