@@ -93,7 +93,7 @@ def:pub app {
     def handleRefineAdvice -> None;
 
     def loadInterviewHistory -> None;
-    def handleViewHistory(entry: any) -> None;
+    def handleViewHistory(entry_point: any) -> None;
     def handleCloseHistory -> None;
     def handleFinish -> None;
 
