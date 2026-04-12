@@ -48,7 +48,10 @@ def:pub app {
         # Safe check for auth (wrap via eval try/catch)
         logged = eval("""
             (() => {
-                try { return jacIsLoggedIn(); }
+                try {
+                    if (typeof jacIsLoggedIn !== "function") return false;
+                    return jacIsLoggedIn();
+                }
                 catch (e) { console.error("jacIsLoggedIn crashed", e); return false; }
             })()
         """);
@@ -231,13 +234,26 @@ def:pub app {
                                 "backgroundColor": "var(--panel)",
                                 "borderRadius": "12px",
                                 "overflow": "hidden",
-                                "aspectRatio": "16/10"
+                                "aspectRatio": "16/10",
+                                "display": "flex",
+                                "alignItems": "center",
+                                "justifyContent": "center"
                             }}>
-                                <video
-                                    src={ent["videoDataUrl"] if ent["videoDataUrl"] else ""}
-                                    controls={True}
-                                    style={{"width": "100%", "height": "100%", "objectFit": "contain"}}
-                                />
+                                {(
+                                    <video
+                                        src={ent["videoDataUrl"]}
+                                        controls={True}
+                                        style={{"width": "100%", "height": "100%", "objectFit": "contain"}}
+                                    />
+                                ) if ent["videoDataUrl"] else (
+                                    <div style={{
+                                        "padding": "1.5rem",
+                                        "textAlign": "center",
+                                        "color": "var(--text-muted)"
+                                    }}>
+                                        Video playback is not available for saved history entries.
+                                    </div>
+                                )}
                             </div>
                             <div>
                                 <h2 style={{"fontSize": "1.25rem", "marginBottom": "0.75rem"}}>Feedback</h2>

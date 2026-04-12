@@ -75,14 +75,38 @@ impl app.handleSubmit(e: any) -> None {
 }
 
 impl app.loadInterviewHistory -> None {
-    # Pass username into JS via global to avoid embedding in string
-    escaped = username.replace("\\", "\\\\").replace("'", "\\'");
-    eval("window.__jac_username = '" + escaped + "';");
+    localStorage.setItem("__jac_history_user", username);
     interviewHistory = eval("""
         (function() {
             try {
-                var h = JSON.parse(localStorage.getItem('interview_history') || '{}');
-                var raw = h[window.__jac_username] || [];
+                var user = localStorage.getItem('__jac_history_user') || '';
+                var perUserKey = 'interview_history__' + user;
+                var raw = [];
+                try {
+                    raw = JSON.parse(localStorage.getItem(perUserKey) || '[]');
+                } catch (e) {
+                    raw = [];
+                }
+                if (!Array.isArray(raw) || raw.length === 0) {
+                    var h = JSON.parse(localStorage.getItem('interview_history') || '{}');
+                    raw = h[user] || [];
+                    if (Array.isArray(raw) && raw.length > 0) {
+                        raw = raw.map(function(entry) {
+                            if (!entry || typeof entry !== 'object') return entry;
+                            return {
+                                id: entry.id || Date.now().toString(),
+                                roleTitle: entry.roleTitle || '',
+                                questionText: entry.questionText || '',
+                                adviceText: entry.adviceText || entry.feedback || '',
+                                feedback: entry.feedback || entry.adviceText || '',
+                                // Drop old embedded videos during migration so future saves fit.
+                                videoDataUrl: '',
+                                createdAt: entry.createdAt || Date.now()
+                            };
+                        });
+                        try { localStorage.setItem(perUserKey, JSON.stringify(raw)); } catch (e) { console.warn('History migration failed:', e); }
+                    }
+                }
                 if (!Array.isArray(raw)) return [];
                 return raw.map(function(entry) {
                     if (!entry || typeof entry !== 'object') return entry;
@@ -285,37 +309,50 @@ impl app.getFeedback -> None {
 
     if response and response.reports and response.reports.length > 0 {
         if response.reports[0]["success"] {
-            adviceText = response.reports[0]["feedback"];
-            # Pass values into JS for saving.
-            # Use replaceAll so multiline feedback with multiple quotes/newlines
-            # survives serialization into the eval string.
-            u_esc = username.replaceAll("\\", "\\\\").replaceAll("'", "\\'");
-            r_esc = roleTitle.replaceAll("\\", "\\\\").replaceAll("'", "\\'");
-            q_esc = questionText.replaceAll("\\", "\\\\").replaceAll("'", "\\'");
-            a_esc = adviceText.replaceAll("\\", "\\\\").replaceAll("'", "\\'").replaceAll("\n", "\\n").replaceAll("\r", "\\r");
-            eval("window.__jac_username = '" + u_esc + "';");
-            eval("window.__jac_roleTitle = '" + r_esc + "';");
-            eval("window.__jac_questionText = '" + q_esc + "';");
-            eval("window.__jac_adviceText = '" + a_esc + "';");
-            eval("window.__jac_videoDataUrl = '" + b64_string + "';");
+            feedback_text = response.reports[0]["feedback"];
+            adviceText = feedback_text;
+            localStorage.setItem("__jac_pending_history_user", username);
+            localStorage.setItem("__jac_pending_history_role", roleTitle);
+            localStorage.setItem("__jac_pending_history_question", questionText);
+            localStorage.setItem("__jac_pending_history_feedback", feedback_text);
             # Save to interview history (role, question, video, feedback) for this user
             eval("""
                 (function() {
-                    var u = window.__jac_username || '';
-                    var h = JSON.parse(localStorage.getItem('interview_history') || '{}');
-                    if (!h[u]) h[u] = [];
+                    var u = localStorage.getItem('__jac_pending_history_user') || '';
+                    var perUserKey = 'interview_history__' + u;
+                    var userHistory = [];
+                    try {
+                        userHistory = JSON.parse(localStorage.getItem(perUserKey) || '[]');
+                    } catch (e) {
+                        userHistory = [];
+                    }
+                    if (!Array.isArray(userHistory) || userHistory.length === 0) {
+                        try {
+                            var h = JSON.parse(localStorage.getItem('interview_history') || '{}');
+                            userHistory = h[u] || [];
+                        } catch (e) {
+                            userHistory = [];
+                        }
+                    }
+                    if (!Array.isArray(userHistory)) userHistory = [];
                     var entry = {
                         id: Date.now().toString(),
-                        roleTitle: window.__jac_roleTitle || '',
-                        questionText: window.__jac_questionText || '',
-                        adviceText: window.__jac_adviceText || '',
-                        feedback: window.__jac_adviceText || '',
-                        videoDataUrl: window.__jac_videoDataUrl || '',
+                        roleTitle: localStorage.getItem('__jac_pending_history_role') || '',
+                        questionText: localStorage.getItem('__jac_pending_history_question') || '',
+                        adviceText: localStorage.getItem('__jac_pending_history_feedback') || '',
+                        feedback: localStorage.getItem('__jac_pending_history_feedback') || '',
+                        // Avoid storing the full base64 video in localStorage; it can
+                        // exceed quota and prevent the entire history entry from saving.
+                        videoDataUrl: '',
                         createdAt: Date.now()
                     };
-                    h[u].push(entry);
-                    if (h[u].length > 10) h[u] = h[u].slice(-10);
-                    try { localStorage.setItem('interview_history', JSON.stringify(h)); } catch (e) { console.warn('History save failed (quota?):', e); }
+                    userHistory.push(entry);
+                    if (userHistory.length > 10) userHistory = userHistory.slice(-10);
+                    try { localStorage.setItem(perUserKey, JSON.stringify(userHistory)); } catch (e) { console.warn('History save failed (quota?):', e); }
+                    localStorage.removeItem('__jac_pending_history_user');
+                    localStorage.removeItem('__jac_pending_history_role');
+                    localStorage.removeItem('__jac_pending_history_question');
+                    localStorage.removeItem('__jac_pending_history_feedback');
                 })()
             """);
             loadInterviewHistory();
