@@ -40,7 +40,7 @@ def:pub app {
     # INITIAL AUTH CHECK
     # ==============================
 
-    can with entry {
+    async can with entry {
         # Default safe state
         isLoggedIn = False;
         currentScreen = "auth";
@@ -73,7 +73,7 @@ def:pub app {
         currentScreen = ("home" if isLoggedIn else "auth");
         checkingAuth = False;
         if isLoggedIn {
-            loadInterviewHistory();
+            await loadInterviewHistory();
         }
     }
 
@@ -90,12 +90,12 @@ def:pub app {
 
     def handleRoleSubmit(e: any) -> None;
     def handleQuestionSubmit(e: any) -> None;
-    def handleHome -> None;
+    async def handleHome -> None;
 
     def handleGiveFeedback -> None;
     def handleRefineAdvice -> None;
 
-    def loadInterviewHistory -> None;
+    async def loadInterviewHistory -> None;
     def handleViewHistory(entry_point: any) -> None;
     def handleCloseHistory -> None;
     def handleFinish -> None;

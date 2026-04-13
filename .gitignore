@@ -10,3 +10,6 @@ node_modules/
 
 # Zone Identifier Files
 *Zone.Identifier
+
+.codex
+.mcp.json
