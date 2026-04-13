@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "jac": {
+      "command": "/home/ultratorchic/eecs449/InterviewerAI/jac-env/bin/jac",
+      "args": ["mcp"],
+      "type": "stdio"
+    }
+  }
+}

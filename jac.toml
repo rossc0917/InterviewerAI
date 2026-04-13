@@ -28,3 +28,24 @@ typescript = "^5.3.3"
 base_route_app = "app"
 
 [plugins.client]
+
+[plugins.mcp]
+# Transport settings
+transport = "stdio"          # "stdio", "sse", or "streamable-http"
+port = 3001                  # Port for SSE/HTTP transports
+host = "127.0.0.1"          # Bind address for SSE/HTTP transports
+
+# Resource exposure
+expose_grammar = true        # Expose jac.spec and token definitions
+expose_docs = true           # Expose language documentation
+expose_examples = true       # Expose example Jac projects
+expose_pitfalls = true       # Expose common AI mistakes guide
+
+# Tool enable/disable
+enable_validate = true       # validate_jac and check_syntax tools
+enable_format = true         # format_jac tool
+enable_py2jac = true         # py_to_jac conversion tool
+enable_ast = false           # get_ast tool (verbose, off by default)
+
+# Project context
+project_root = "."           # Root directory for project-aware tools

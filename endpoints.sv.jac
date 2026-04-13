@@ -6,7 +6,7 @@ import base64;
 import time;
 import google.genai as genai;
 
-walker:pub SubmitInterview {
+walker SubmitInterview {
     has role: str;
     has question: str;
     has video_b64: str;
