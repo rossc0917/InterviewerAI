@@ -43,7 +43,7 @@ def:pub app {
     async can with entry {
         # Default safe state
         isLoggedIn = False;
-        currentScreen = "auth";
+        currentScreen = "landing";
 
         # Safe check for auth (wrap via eval try/catch)
         logged = eval("""
@@ -70,7 +70,7 @@ def:pub app {
             rememberMe = True;
         }
 
-        currentScreen = ("home" if isLoggedIn else "auth");
+        currentScreen = "landing";
         checkingAuth = False;
         if isLoggedIn {
             await loadInterviewHistory();
@@ -99,6 +99,10 @@ def:pub app {
     def handleViewHistory(entry_point: any) -> None;
     def handleCloseHistory -> None;
     def handleFinish -> None;
+
+    def handleGoToLogin -> None {
+        currentScreen = "auth";
+    }
 
     async def startCamera -> None;
     def startRecording -> None;
@@ -166,7 +170,7 @@ def:pub app {
     # AUTH SCREEN
     # ==============================
 
-    if not isLoggedIn {
+    if not isLoggedIn and currentScreen == "auth" {
         return
             <AuthForm
                 isSignup={isSignup}
@@ -181,6 +185,138 @@ def:pub app {
                 onSubmit={handleSubmit}
                 onToggleMode={lambda -> None { isSignup = not isSignup; error = ""; }}
             />;
+    }  
+
+    # ==============================
+    # LANDING PAGE
+    # ==============================
+
+    if currentScreen == "landing" {
+
+        return
+            <div style={{
+                "height": "100vh",
+                "display": "flex",
+                "flexDirection": "column",
+                "justifyContent": "space-between",
+                "fontFamily": "sans-serif",
+                "padding": "2rem 4rem"
+            }}>
+
+                <div style={{
+                    "display": "flex",
+                    "justifyContent": "space-between",
+                    "alignItems": "center"
+                }}>
+                    <img class="top-logo" src="/interviewerai-logo-full.png" />
+
+                    <button
+                        onClick={handleGoToLogin}
+                        style={{
+                            **dark_btn_style,
+                            "fontWeight": "600"
+                        }}
+                    >
+                        Login
+                    </button>
+                </div>
+
+                <div style={{
+                    "display": "flex",
+                    "flexDirection": "column",
+                    "alignItems": "center",
+                    "textAlign": "center",
+                    "gap": "1.5rem"
+                }}>
+                    <h1 style={{
+                        "fontSize": "3rem",
+                        "margin": "0"
+                    }}>
+                        Practice Interviews Smarter
+                    </h1>
+
+                    <p style={{
+                        "fontSize": "1.25rem",
+                        "color": "var(--text-muted)",
+                        "maxWidth": "600px"
+                    }}>
+                        Confidence Starts Here⚡Practice Interviews, Improve Quickly. 
+                    </p>
+                    
+                    <video
+                        src="/assets/InterviewerAI_Demo.mp4"
+                        autoPlay={False}
+                        muted={False}
+                        loop={False}
+                        playsInline={True}
+                        controls={True}
+                        style={{
+                            "width": "100%",
+                            "maxWidth": "800px",
+                            "borderRadius": "12px",
+                            "marginTop": "1.5rem",
+                            "boxShadow": "0 10px 30px rgba(0,0,0,0.2)"
+                        }}
+                    />
+
+                    <button
+                        onClick={handleGoToLogin}
+                        style={{
+                            **dark_btn_style,
+                            "fontSize": "1.1rem",
+                            "padding": "0.75rem 1.5rem"
+                        }}
+                    >
+                        Get Started
+                    </button>
+                </div>
+
+                <a
+                    href="https://www.jaseci.org/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                        position: "fixed",
+                        bottom: "16px",
+                        right: "20px",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.6rem",
+                        padding: "0.5rem 0.75rem",
+                        backgroundColor: "rgba(0,0,0,0.6)",
+                        border: "1px solid var(--border)",
+                        borderRadius: "10px",
+                        textDecoration: "none",
+                        zIndex: 10
+                    }}
+                >
+                    <span style={{
+                        fontSize: "0.95rem",
+                        color: "#ffffff",
+                        fontWeight: "600"
+                    }}>
+                        Built with
+                    </span>
+
+                    <img
+                        src="/jaseci-logo.png"
+                        alt="Jaseci"
+                        style={{
+                            height: "22px",
+                            objectFit: "contain"
+                        }}
+                    />
+                </a>
+
+                <div style={{
+                    "textAlign": "center",
+                    "color": "var(--text-muted)",
+                    "fontSize": "0.9rem"
+                }}>
+                    Built to help you land your next role 🚀
+                </div>
+
+            </div>;
     }
 
     # ==============================
