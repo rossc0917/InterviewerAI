@@ -244,7 +244,7 @@ def:pub app {
                     </p>
                     
                     <video
-                        src="/assets/InterviewerAI_Demo.mp4"
+                        src="/assets/InterviewerAI_Demo_Polished.mp4"
                         autoPlay={False}
                         muted={False}
                         loop={False}
